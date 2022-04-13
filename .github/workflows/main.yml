@@ -9,17 +9,15 @@ jobs:
   test:
     name: Test all modes 📝
     uses: ./.github/workflows/test.yml
-    with:
-      secrets:
-        UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+    secrets:
+      UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
 
   build:
     needs: test
     name: Builds for all environments 🖥️
     uses: ./.github/workflows/build.yml
-    with:
-      secrets:
-        UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+    secrets:
+      UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
 
 
   deployPages:
