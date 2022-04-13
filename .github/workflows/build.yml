@@ -1,9 +1,10 @@
 ﻿name: Build
 
-on: workflow_call
-
-env:
-  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+on: 
+  workflow_call:
+    secrets:
+      UNITY_LICENSE:
+        required: true
 
 jobs:
   buildWebGL:
