@@ -8,12 +8,12 @@ env:
 jobs:
   test:
     name: Test all modes 📝
-    uses: ./.github/workflows/test.yml@main
+    uses: ./.github/workflows/test.yml
 
   build:
     needs: test
     name: Builds for all environments 🖥️
-    uses: ./github/workflows/build.yml@main
+    uses: ./github/workflows/build.yml
 
 
   deployPages:
