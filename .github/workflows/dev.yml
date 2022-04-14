@@ -1,0 +1,22 @@
+﻿name: Test and Build 🎮
+
+on:
+  push:
+    branches: ['*', '!master']
+
+env:
+  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+
+jobs:
+  test:
+    name: Test all modes 📝
+    uses: ./.github/workflows/test.yml
+    secrets:
+      UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+
+  build:
+    needs: test
+    name: Builds for all environments 🖥️
+    uses: ./.github/workflows/build.yml
+    secrets:
+      UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
