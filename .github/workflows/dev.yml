@@ -8,7 +8,12 @@ env:
   UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
 
 jobs:
+  lint:
+    name: Check Formatting
+    uses: ./.github/workflows/lint.yml
+        
   test:
+    needs: lint
     name: Test all modes 📝
     uses: ./.github/workflows/test.yml
     secrets:
