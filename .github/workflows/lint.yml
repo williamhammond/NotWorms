@@ -1,0 +1,15 @@
+on: workflow_call
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    name: Check Formatting
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Restore tools
+        run: dotnet tool restore
+
+      - name: Run csharpier
+        run: dotnet csharpier --check ./Assets/Scripts
