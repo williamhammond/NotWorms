@@ -5,6 +5,9 @@ on:
     secrets:
       UNITY_LICENSE:
         required: true
+        
+env:
+  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
 
 jobs:
   testRunner:
