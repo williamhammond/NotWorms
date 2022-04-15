@@ -2,6 +2,7 @@ name: Test, Build and Deploy 🎮
 
 on:
   push:
+    paths: ["Assets/**"]
     branches: ['main']
 
 env:
