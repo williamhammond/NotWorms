@@ -14,7 +14,7 @@
 ### Nice To Have
 
 * [rider](https://www.jetbrains.com/rider/)
-* [cmder](https://cmder.net/) (not strictly necessary but nice to have)
+* [cmder](https://cmder.net/)
 
 ## Setup
 
