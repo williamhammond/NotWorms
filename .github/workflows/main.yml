@@ -2,7 +2,7 @@ name: Test, Build and Deploy 🎮
 
 on:
   push:
-    paths: ["Assets/**", ".github/workflows"]
+    paths: ["Assets/**", ".github/workflows/**"]
     branches: ['main']
 
 env:
