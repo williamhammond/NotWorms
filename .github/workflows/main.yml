@@ -36,3 +36,5 @@ jobs:
         with:
           branch: gh-pages
           folder: build/WebGL
+          commit-message: Deploy
+          single-commit: true
