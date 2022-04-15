@@ -3,13 +3,13 @@ name: Test, Build and Deploy 🎮
 on:
   push:
     branches: ['main']
+    paths: ['Assets/**', '.github/**']
 
 env:
   UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
 
 jobs:
   build:
-    needs: test
     uses: ./.github/workflows/build.yml
     secrets:
       UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
