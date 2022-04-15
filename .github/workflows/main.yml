@@ -2,15 +2,22 @@ name: Test, Build and Deploy 🎮
 
 on:
   push:
-    paths: ["Assets/**"]
+    paths: ["Assets/**", ".github/workflows"]
     branches: ['main']
 
 env:
   UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
 
 jobs:
+  build:
+    needs: test
+    uses: ./.github/workflows/build.yml
+    secrets:
+      UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+      
   deployPages:
     name: Deploy to Github Pages 🚀
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

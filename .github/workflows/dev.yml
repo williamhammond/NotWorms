@@ -2,7 +2,7 @@
 
 on:
   push:
-    paths: ["Assets/**"]
+    paths: ["Assets/**", ".github/workflows"]
     branches: ['*', '!main']
     
 
