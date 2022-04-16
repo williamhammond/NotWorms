@@ -27,7 +27,7 @@ namespace Tests.Gameplay.Player
 
             yield return new WaitForSeconds(3f);
 
-            Assert.IsTrue(player.transform.position.x == 0);
+            Assert.IsTrue(player.transform.position.x != 0);
 
             Object.Destroy(player);
             Object.Destroy(root);
