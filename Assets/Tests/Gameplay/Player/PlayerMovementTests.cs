@@ -1,4 +1,6 @@
 using System.Collections;
+using Gameplay.Player;
+using NSubstitute;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
@@ -23,7 +25,11 @@ namespace Tests.Gameplay.Player
 
             var player = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Player.prefab");
             player = Object.Instantiate(player, new Vector2(0, 0), new Quaternion(0, 0, 0, 0));
-            player.SendMessage("MoveHorizontal");
+
+            global::Gameplay.Player.Player comp =
+                player.GetComponent<global::Gameplay.Player.Player>();
+            comp.PlayerInput = Substitute.For<IPlayerInput>();
+            comp.PlayerInput.Horizontal.Returns(10f);
 
             yield return new WaitForSeconds(3f);
 

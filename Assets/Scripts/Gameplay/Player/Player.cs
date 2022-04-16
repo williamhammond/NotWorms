@@ -3,15 +3,19 @@ using UnityEngine;
 namespace Gameplay.Player
 {
     [RequireComponent(typeof(Rigidbody2D))]
-    public class PlayerMovement : MonoBehaviour
+    public class Player : MonoBehaviour
     {
         [SerializeField]
         private float speed;
+
+        // Visible for testing
+        public IPlayerInput PlayerInput { get; set; }
 
         private Rigidbody2D _body;
 
         private void Awake()
         {
+            PlayerInput = new PlayerInput();
             _body = GetComponent<Rigidbody2D>();
             speed = 1f;
         }
@@ -19,7 +23,7 @@ namespace Gameplay.Player
         void Update()
         {
             MoveHorizontal();
-            if (Input.GetKey(KeyCode.Space))
+            if (PlayerInput.IsJumping)
             {
                 Jump();
             }
@@ -27,8 +31,7 @@ namespace Gameplay.Player
 
         void MoveHorizontal()
         {
-            transform.position += new Vector3(1, 0);
-            // _body.velocity = new Vector2(Input.GetAxis("Horizontal") * speed, _body.velocity.y);
+            _body.velocity = new Vector2(PlayerInput.Horizontal * speed, _body.velocity.y);
         }
 
         void Jump()
