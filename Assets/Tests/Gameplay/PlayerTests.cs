@@ -11,6 +11,8 @@ namespace Tests.Gameplay
 {
     public class PlayerTest
     {
+        private const int MaxFramesPerTest = 60 * 5;
+
         public class PlayerMovementTests
         {
             [UnityTest]
@@ -29,9 +31,18 @@ namespace Tests.Gameplay
                 comp.PlayerInput = Substitute.For<IPlayerInput>();
                 comp.PlayerInput.Horizontal.Returns(10f);
 
-                yield return WaitForNFrames(120);
-
-                Assert.IsTrue(player.transform.position.x > 0);
+                bool hasMoved = false;
+                int frames = 0;
+                while (!hasMoved && frames < MaxFramesPerTest)
+                {
+                    yield return WaitForNFrames(1);
+                    if (player.transform.position.x > 0)
+                    {
+                        hasMoved = true;
+                    }
+                    frames++;
+                }
+                Assert.IsTrue(hasMoved, "Player failed to move right");
 
                 Object.Destroy(player);
                 Object.Destroy(root);
@@ -53,9 +64,18 @@ namespace Tests.Gameplay
                 comp.PlayerInput = Substitute.For<IPlayerInput>();
                 comp.PlayerInput.Horizontal.Returns(-10f);
 
-                yield return WaitForNFrames(120);
-
-                Assert.IsTrue(player.transform.position.x < 0);
+                bool hasMoved = false;
+                int frames = 0;
+                while (!hasMoved && frames < MaxFramesPerTest)
+                {
+                    yield return WaitForNFrames(1);
+                    if (player.transform.position.x < 0)
+                    {
+                        hasMoved = true;
+                    }
+                    frames++;
+                }
+                Assert.IsTrue(hasMoved, "Player failed to move left");
 
                 Object.Destroy(player);
                 Object.Destroy(root);
@@ -77,10 +97,21 @@ namespace Tests.Gameplay
                 comp.PlayerInput = Substitute.For<IPlayerInput>();
 
                 comp.PlayerInput.IsJumping.Returns(true);
-                yield return WaitForNFrames(120);
-                comp.PlayerInput.IsJumping.Returns(true);
+                yield return new WaitForSeconds(1f);
+                bool hasJumped = false;
+                int frames = 0;
+                while (!hasJumped && frames < MaxFramesPerTest)
+                {
+                    yield return WaitForNFrames(1);
+                    if (player.transform.position.y > 0)
+                    {
+                        hasJumped = true;
+                    }
+                    frames++;
+                }
+                comp.PlayerInput.IsJumping.Returns(false);
 
-                Assert.IsTrue(player.transform.position.y > 0);
+                Assert.IsTrue(hasJumped, "Player failed to jump");
 
                 Object.Destroy(player);
                 Object.Destroy(root);
