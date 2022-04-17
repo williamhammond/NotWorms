@@ -29,7 +29,7 @@ namespace Tests.Gameplay
                 comp.PlayerInput = Substitute.For<IPlayerInput>();
                 comp.PlayerInput.Horizontal.Returns(10f);
 
-                yield return WaitForNFrames(60);
+                yield return WaitForNFrames(120);
 
                 Assert.IsTrue(player.transform.position.x > 0);
 
@@ -53,7 +53,7 @@ namespace Tests.Gameplay
                 comp.PlayerInput = Substitute.For<IPlayerInput>();
                 comp.PlayerInput.Horizontal.Returns(-10f);
 
-                yield return WaitForNFrames(60);
+                yield return WaitForNFrames(120);
 
                 Assert.IsTrue(player.transform.position.x < 0);
 
@@ -88,6 +88,8 @@ namespace Tests.Gameplay
 
             private IEnumerator WaitForNFrames(int n)
             {
+                // Do not use WaitForEndOfFrame() here until Unity fixes coroutine issues
+                // with the method https://forum.unity.com/threads/do-not-use-waitforendofframe.883648/
                 for (int i = 0; i < n; i++)
                 {
                     yield return null;
