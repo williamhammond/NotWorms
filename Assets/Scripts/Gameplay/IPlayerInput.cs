@@ -1,4 +1,4 @@
-﻿namespace Gameplay.Player
+﻿namespace Gameplay
 {
     public interface IPlayerInput
     {
