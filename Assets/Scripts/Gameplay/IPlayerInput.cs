@@ -3,6 +3,6 @@
     public interface IPlayerInput
     {
         float Horizontal { get; }
-        bool IsJumping { get; }
+        bool Jump { get; }
     }
 }

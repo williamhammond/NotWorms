@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Gameplay
@@ -11,18 +12,28 @@ namespace Gameplay
         public IPlayerInput PlayerInput { get; set; }
 
         private Rigidbody2D _body;
+        private Animator _animator;
+
+        private bool _isJumping = false;
+
+        private static readonly int IsRunningID = Animator.StringToHash("isRunning");
+        private static readonly int IsJumpingID = Animator.StringToHash("isJumping");
 
         private void Awake()
         {
             PlayerInput = new PlayerInput();
             _body = GetComponent<Rigidbody2D>();
-            speed = 1f;
+            _animator = GetComponent<Animator>();
+            speed = 5f;
         }
 
         void Update()
         {
             MoveHorizontal();
-            if (PlayerInput.IsJumping)
+            HandleOrientation();
+            _animator.SetBool(IsJumpingID, _isJumping);
+
+            if (PlayerInput.Jump && !_isJumping)
             {
                 Jump();
             }
@@ -31,11 +42,33 @@ namespace Gameplay
         void MoveHorizontal()
         {
             _body.velocity = new Vector2(PlayerInput.Horizontal * speed, _body.velocity.y);
+            _animator.SetBool(IsRunningID, PlayerInput.Horizontal != 0);
         }
 
         void Jump()
         {
             _body.velocity = new Vector2(_body.velocity.x, speed);
+            _isJumping = true;
+        }
+
+        private void HandleOrientation()
+        {
+            if (PlayerInput.Horizontal >= 0f)
+            {
+                transform.localScale = Vector3.one;
+            }
+            else if (PlayerInput.Horizontal < 0.01f)
+            {
+                transform.localScale = new Vector3(-1, 1, 1);
+            }
+        }
+
+        private void OnCollisionEnter2D(Collision2D collision2D)
+        {
+            if (collision2D.gameObject.CompareTag("Ground"))
+            {
+                _isJumping = false;
+            }
         }
     }
 }
