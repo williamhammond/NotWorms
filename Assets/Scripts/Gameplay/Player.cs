@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Gameplay.Player
+namespace Gameplay
 {
     [RequireComponent(typeof(Rigidbody2D))]
     public class Player : MonoBehaviour
@@ -8,7 +8,6 @@ namespace Gameplay.Player
         [SerializeField]
         private float speed;
 
-        // Visible for testing
         public IPlayerInput PlayerInput { get; set; }
 
         private Rigidbody2D _body;
