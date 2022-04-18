@@ -14,7 +14,7 @@ namespace Gameplay
         private Rigidbody2D _body;
         private Animator _animator;
 
-        private bool _isJumping = true;
+        private bool _isJumping = false;
 
         private static readonly int IsRunningID = Animator.StringToHash("isRunning");
         private static readonly int IsJumpingID = Animator.StringToHash("isJumping");
@@ -24,7 +24,7 @@ namespace Gameplay
             PlayerInput = new PlayerInput();
             _body = GetComponent<Rigidbody2D>();
             _animator = GetComponent<Animator>();
-            speed = 1f;
+            speed = 5f;
         }
 
         void Update()
