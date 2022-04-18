@@ -75,7 +75,7 @@ namespace Tests.Gameplay
                 Player comp = player.GetComponent<Player>();
                 comp.PlayerInput = Substitute.For<IPlayerInput>();
 
-                comp.PlayerInput.IsJumping.Returns(true);
+                comp.PlayerInput.Jump.Returns(true);
 
                 yield return new WaitUntil(() => player.transform.position.y > 0);
 
