@@ -11,11 +11,10 @@ namespace Tests.Gameplay
 {
     public class PlayerTest
     {
-        private const int MaxFramesPerTest = 60 * 5;
-
         public class PlayerMovementTests
         {
             [UnityTest]
+            [Timeout(1000 * 5)]
             public IEnumerator PlayerMovesRight()
             {
                 RenderSettings.skybox = null;
@@ -29,26 +28,16 @@ namespace Tests.Gameplay
 
                 Player comp = player.GetComponent<Player>();
                 comp.PlayerInput = Substitute.For<IPlayerInput>();
-                comp.PlayerInput.Horizontal.Returns(10f);
 
-                bool hasMoved = false;
-                int frames = 0;
-                while (!hasMoved && frames < MaxFramesPerTest)
-                {
-                    yield return WaitForNFrames(1);
-                    if (player.transform.position.x > 0)
-                    {
-                        hasMoved = true;
-                    }
-                    frames++;
-                }
-                Assert.IsTrue(hasMoved, "Player failed to move right");
+                comp.PlayerInput.Horizontal.Returns(10f);
+                yield return new WaitUntil(() => player.transform.position.x > 0);
 
                 Object.Destroy(player);
                 Object.Destroy(root);
             }
 
             [UnityTest]
+            [Timeout(1000 * 5)]
             public IEnumerator PlayerMovesLeft()
             {
                 RenderSettings.skybox = null;
@@ -62,26 +51,16 @@ namespace Tests.Gameplay
 
                 Player comp = player.GetComponent<Player>();
                 comp.PlayerInput = Substitute.For<IPlayerInput>();
-                comp.PlayerInput.Horizontal.Returns(-10f);
 
-                bool hasMoved = false;
-                int frames = 0;
-                while (!hasMoved && frames < MaxFramesPerTest)
-                {
-                    yield return WaitForNFrames(1);
-                    if (player.transform.position.x < 0)
-                    {
-                        hasMoved = true;
-                    }
-                    frames++;
-                }
-                Assert.IsTrue(hasMoved, "Player failed to move left");
+                comp.PlayerInput.Horizontal.Returns(-10f);
+                yield return new WaitUntil(() => player.transform.position.x < 0);
 
                 Object.Destroy(player);
                 Object.Destroy(root);
             }
 
             [UnityTest]
+            [Timeout(1000 * 5)]
             public IEnumerator PlayerJumps()
             {
                 RenderSettings.skybox = null;
@@ -97,21 +76,8 @@ namespace Tests.Gameplay
                 comp.PlayerInput = Substitute.For<IPlayerInput>();
 
                 comp.PlayerInput.IsJumping.Returns(true);
-                yield return new WaitForSeconds(1f);
-                bool hasJumped = false;
-                int frames = 0;
-                while (!hasJumped && frames < MaxFramesPerTest)
-                {
-                    yield return WaitForNFrames(1);
-                    if (player.transform.position.y > 0)
-                    {
-                        hasJumped = true;
-                    }
-                    frames++;
-                }
-                comp.PlayerInput.IsJumping.Returns(false);
 
-                Assert.IsTrue(hasJumped, "Player failed to jump");
+                yield return new WaitUntil(() => player.transform.position.y > 0);
 
                 Object.Destroy(player);
                 Object.Destroy(root);
