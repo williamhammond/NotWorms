@@ -6,5 +6,6 @@ namespace Gameplay
     {
         public float Horizontal => Input.GetAxis("Horizontal");
         public bool Jump => Input.GetKey(KeyCode.Space);
+        public bool Fire => Input.GetMouseButton(0);
     }
 }

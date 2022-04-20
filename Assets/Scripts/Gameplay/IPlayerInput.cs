@@ -4,5 +4,7 @@
     {
         float Horizontal { get; }
         bool Jump { get; }
+
+        bool Fire { get; }
     }
 }
