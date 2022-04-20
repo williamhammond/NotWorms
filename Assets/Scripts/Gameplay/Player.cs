@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace Gameplay
@@ -13,17 +12,20 @@ namespace Gameplay
 
         private Rigidbody2D _body;
         private Animator _animator;
+        private Weapon _weapon;
 
         private bool _isJumping = false;
 
         private static readonly int IsRunningID = Animator.StringToHash("isRunning");
         private static readonly int IsJumpingID = Animator.StringToHash("isJumping");
+        private static readonly int AttackID = Animator.StringToHash("attack");
 
         private void Awake()
         {
             PlayerInput = new PlayerInput();
             _body = GetComponent<Rigidbody2D>();
             _animator = GetComponent<Animator>();
+            _weapon = GetComponent<Weapon>();
             speed = 5f;
         }
 
@@ -37,6 +39,13 @@ namespace Gameplay
             {
                 Jump();
             }
+
+            if (PlayerInput.Fire && CanAttack())
+            {
+                _animator.SetTrigger(AttackID);
+                _weapon.Fire();
+            }
+            _weapon.IncrementTimer(Time.deltaTime);
         }
 
         void MoveHorizontal()
@@ -49,6 +58,11 @@ namespace Gameplay
         {
             _body.velocity = new Vector2(_body.velocity.x, speed);
             _isJumping = true;
+        }
+
+        private bool CanAttack()
+        {
+            return PlayerInput.Horizontal == 0 && !_isJumping && !_weapon.OnCooldown();
         }
 
         private void HandleOrientation()
