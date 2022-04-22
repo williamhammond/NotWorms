@@ -33,8 +33,8 @@ namespace Gameplay
         {
             MoveHorizontal();
             HandleOrientation();
-            _animator.SetBool(IsJumpingID, _isJumping);
 
+            _animator.SetBool(IsJumpingID, _isJumping);
             if (PlayerInput.Jump && !_isJumping)
             {
                 Jump();
@@ -67,11 +67,11 @@ namespace Gameplay
 
         private void HandleOrientation()
         {
-            if (PlayerInput.Horizontal >= 0f)
+            if (PlayerInput.Horizontal > 0.01f)
             {
                 transform.localScale = Vector3.one;
             }
-            else if (PlayerInput.Horizontal < 0.01f)
+            else if (PlayerInput.Horizontal < -0.01f)
             {
                 transform.localScale = new Vector3(-1, 1, 1);
             }
