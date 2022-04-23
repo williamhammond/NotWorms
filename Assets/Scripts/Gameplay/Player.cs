@@ -3,30 +3,49 @@ using UnityEngine;
 namespace Gameplay
 {
     [RequireComponent(typeof(Rigidbody2D))]
-    public class Player : MonoBehaviour
+    public class Player : MonoBehaviour, IDamagable
     {
         [SerializeField]
         private float speed;
+
+        [SerializeField]
+        private float health;
+
+        [SerializeField]
+        private bool isPlayer;
 
         public IPlayerInput PlayerInput { get; set; }
 
         private Rigidbody2D _body;
         private Animator _animator;
         private Weapon _weapon;
+        private float _deathAnimationTime;
 
         private bool _isJumping = false;
 
         private static readonly int IsRunningID = Animator.StringToHash("isRunning");
         private static readonly int IsJumpingID = Animator.StringToHash("isJumping");
         private static readonly int AttackID = Animator.StringToHash("attack");
+        private static readonly int DeathID = Animator.StringToHash("death");
 
         private void Awake()
         {
-            PlayerInput = new PlayerInput();
+            if (isPlayer)
+            {
+                PlayerInput = new PlayerInput();
+            }
             _body = GetComponent<Rigidbody2D>();
             _animator = GetComponent<Animator>();
             _weapon = GetComponent<Weapon>();
             speed = 5f;
+            AnimationClip[] clips = _animator.runtimeAnimatorController.animationClips;
+            foreach (AnimationClip clip in clips)
+            {
+                if (DeathID == Animator.StringToHash(clip.name))
+                {
+                    _deathAnimationTime = clip.length;
+                }
+            }
         }
 
         void Update()
@@ -83,6 +102,27 @@ namespace Gameplay
             {
                 _isJumping = false;
             }
+        }
+
+        public float GetHealth()
+        {
+            return health;
+        }
+
+        public void TakeDamage(float damage)
+        {
+            health -= damage;
+            Debug.Log($"Player health is {health}");
+            if (!IsAlive())
+            {
+                _animator.SetTrigger(DeathID);
+                Destroy(gameObject, _deathAnimationTime);
+            }
+        }
+
+        public bool IsAlive()
+        {
+            return health > 0;
         }
     }
 }

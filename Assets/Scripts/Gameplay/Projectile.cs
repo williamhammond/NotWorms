@@ -11,6 +11,9 @@ namespace Gameplay
         [SerializeField]
         private float maxLifetime;
 
+        [SerializeField]
+        private float damage;
+
         private Animator _animator;
         private BoxCollider2D _boxCollider;
 
@@ -59,6 +62,11 @@ namespace Gameplay
             _isHit = true;
             _boxCollider.enabled = false;
             _animator.SetTrigger(ExplodeID);
+            Player player = other.GetComponentInParent<Player>();
+            if (player)
+            {
+                player.TakeDamage(damage);
+            }
         }
 
         private void Destroy()
