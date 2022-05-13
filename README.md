@@ -10,6 +10,7 @@
 * [csharpier](https://csharpier.com/)
 * [Github Actions](https://github.com/features/actions)
 * [Git Hooks](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks)
+* dotnet 5
 
 ### Nice To Have
 
