@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Gameplay
@@ -11,8 +12,12 @@ namespace Gameplay
         [SerializeField]
         private float health;
 
+        private float energy;
+
         [SerializeField]
         private bool isPlayer;
+
+        private EnergyLabel energyLabel;
 
         public IPlayerInput PlayerInput { get; set; }
 
@@ -33,11 +38,13 @@ namespace Gameplay
             if (isPlayer)
             {
                 PlayerInput = new PlayerInput();
+                energyLabel = FindObjectOfType<EnergyLabel>();
             }
             _body = GetComponent<Rigidbody2D>();
             _animator = GetComponent<Animator>();
             _weapon = GetComponent<Weapon>();
             speed = 5f;
+            energy = 100f;
             AnimationClip[] clips = _animator.runtimeAnimatorController.animationClips;
             foreach (AnimationClip clip in clips)
             {
@@ -54,29 +61,53 @@ namespace Gameplay
             HandleOrientation();
 
             _animator.SetBool(IsJumpingID, _isJumping);
-            if (PlayerInput.Jump && !_isJumping)
+            if (isPlayer && PlayerInput.Jump && !_isJumping)
             {
-                Jump();
+                if (energy > 0)
+                {
+                    Jump();
+                }
             }
 
-            if (PlayerInput.Fire && CanAttack())
+            if (isPlayer && PlayerInput.Fire && CanAttack())
             {
                 _animator.SetTrigger(AttackID);
                 _weapon.Fire();
+            }
+
+            if (isPlayer && PlayerInput.ResetEnergy)
+            {
+                energy = 100f;
+                UpdateEnergyLabel();
             }
             _weapon.IncrementTimer(Time.deltaTime);
         }
 
         void MoveHorizontal()
         {
-            _body.velocity = new Vector2(PlayerInput.Horizontal * speed, _body.velocity.y);
-            _animator.SetBool(IsRunningID, PlayerInput.Horizontal != 0);
+            if (CanMove() && isPlayer)
+            {
+                _body.velocity = new Vector2(PlayerInput.Horizontal * speed, _body.velocity.y);
+
+                if (Math.Abs(PlayerInput.Horizontal) > 0f)
+                {
+                    energy -= .1f;
+                    UpdateEnergyLabel();
+                }
+            }
+
+            if (isPlayer)
+            {
+                _animator.SetBool(IsRunningID, PlayerInput.Horizontal != 0);
+            }
         }
 
         void Jump()
         {
             _body.velocity = new Vector2(_body.velocity.x, speed);
             _isJumping = true;
+            energy -= 10f;
+            UpdateEnergyLabel();
         }
 
         private bool CanAttack()
@@ -86,6 +117,11 @@ namespace Gameplay
 
         private void HandleOrientation()
         {
+            if (!isPlayer)
+            {
+                return;
+            }
+
             if (PlayerInput.Horizontal > 0.01f)
             {
                 transform.localScale = Vector3.one;
@@ -109,6 +145,14 @@ namespace Gameplay
             return health;
         }
 
+        public void UpdateEnergyLabel()
+        {
+            if (isPlayer)
+            {
+                energyLabel.UpdateEnergy(energy);
+            }
+        }
+
         public void TakeDamage(float damage)
         {
             health -= damage;
@@ -123,6 +167,11 @@ namespace Gameplay
         public bool IsAlive()
         {
             return health > 0;
+        }
+
+        public bool CanMove()
+        {
+            return energy > 0;
         }
     }
 }
