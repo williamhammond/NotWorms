@@ -6,13 +6,11 @@ namespace Gameplay
     [RequireComponent(typeof(Rigidbody2D))]
     public class Player : MonoBehaviour, IDamagable
     {
-        [SerializeField]
-        private float speed;
+        private float speed = 5f;
 
-        [SerializeField]
-        private float health;
+        private float health = 100f;
 
-        private float energy;
+        private float energy = 100f;
 
         [SerializeField]
         private bool isPlayer;
@@ -43,8 +41,6 @@ namespace Gameplay
             _body = GetComponent<Rigidbody2D>();
             _animator = GetComponent<Animator>();
             _weapon = GetComponent<Weapon>();
-            speed = 5f;
-            energy = 100f;
             AnimationClip[] clips = _animator.runtimeAnimatorController.animationClips;
             foreach (AnimationClip clip in clips)
             {
