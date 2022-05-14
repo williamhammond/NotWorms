@@ -6,10 +6,13 @@ namespace Gameplay
     [RequireComponent(typeof(Rigidbody2D))]
     public class Player : MonoBehaviour, IDamagable
     {
+        [SerializeField]
         private float speed = 5f;
 
+        [SerializeField]
         private float health = 100f;
 
+        [SerializeField]
         private float energy = 100f;
 
         [SerializeField]
