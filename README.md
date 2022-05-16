@@ -4,7 +4,6 @@
 
 ### Required
 
-* Windows 10
 * Unity 2021.3
 * git
 * [csharpier](https://csharpier.com/)
