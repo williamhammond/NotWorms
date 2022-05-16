@@ -8,6 +8,6 @@
         bool Fire { get; }
 
         bool ResetEnergy { get; }
-        bool NextTurn { get;  }
+        bool NextTurn { get; }
     }
 }

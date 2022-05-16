@@ -1,11 +1,4 @@
 ﻿using System.Collections;
-using Gameplay;
-using NSubstitute;
-using NUnit.Framework;
-using UnityEditor;
-using UnityEngine;
-using UnityEngine.TestTools;
-using Object = UnityEngine.Object;
 
 namespace Tests.Gameplay
 {

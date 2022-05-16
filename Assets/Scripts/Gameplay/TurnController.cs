@@ -13,7 +13,8 @@ namespace Gameplay
 
         public void AddPlayer(Player player)
         {
-            if (turnOrder.Contains(player)) return;
+            if (turnOrder.Contains(player))
+                return;
 
             turnOrder.Add(player);
         }
