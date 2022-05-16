@@ -101,7 +101,10 @@ namespace Gameplay
         {
             if (CanMove() && isPlayer)
             {
-                _body.velocity = new Vector2(playerInput.HorizontalMovement * speed, _body.velocity.y);
+                _body.velocity = new Vector2(
+                    playerInput.HorizontalMovement * speed,
+                    _body.velocity.y
+                );
 
                 if (Math.Abs(playerInput.HorizontalMovement) > 0f)
                 {
