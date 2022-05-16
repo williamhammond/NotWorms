@@ -6,5 +6,7 @@
         bool Jump { get; }
 
         bool Fire { get; }
+
+        bool ResetEnergy { get; }
     }
 }
