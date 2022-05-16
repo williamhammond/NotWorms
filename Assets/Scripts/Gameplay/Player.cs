@@ -18,6 +18,10 @@ namespace Gameplay
         [SerializeField]
         private bool isPlayer;
 
+        [SerializeField]
+        private TurnController turnController;
+
+        private CurrentTurnText turnText;
         private EnergyLabel energyLabel;
 
         public IPlayerInput PlayerInput { get; set; }
@@ -40,10 +44,15 @@ namespace Gameplay
             {
                 PlayerInput = new PlayerInput();
                 energyLabel = FindObjectOfType<EnergyLabel>();
+                turnText = FindObjectOfType<CurrentTurnText>();
             }
+
             _body = GetComponent<Rigidbody2D>();
             _animator = GetComponent<Animator>();
             _weapon = GetComponent<Weapon>();
+
+            turnController.AddPlayer(this);
+
             AnimationClip[] clips = _animator.runtimeAnimatorController.animationClips;
             foreach (AnimationClip clip in clips)
             {
@@ -79,6 +88,12 @@ namespace Gameplay
                 energy = 100f;
                 UpdateEnergyLabel();
             }
+
+            if (isPlayer && PlayerInput.NextTurn)
+            {
+                NextTurn();
+            }
+
             _weapon.IncrementTimer(Time.deltaTime);
         }
 
@@ -161,6 +176,12 @@ namespace Gameplay
                 _animator.SetTrigger(DeathID);
                 Destroy(gameObject, _deathAnimationTime);
             }
+        }
+
+        void NextTurn()
+        {
+            turnController.NextTurn();
+            turnText.UpdateTurn(turnController.currentTurn);
         }
 
         public bool IsAlive()

@@ -9,5 +9,6 @@ namespace Gameplay
         public bool Fire => Input.GetMouseButton(0);
 
         public bool ResetEnergy => Input.GetKey(KeyCode.X);
+        public bool NextTurn => Input.GetKey(KeyCode.R);
     }
 }
