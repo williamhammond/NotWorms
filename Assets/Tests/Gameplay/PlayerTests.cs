@@ -22,7 +22,7 @@ namespace Tests.Gameplay
             //     Player comp = player.GetComponent<Player>();
             //     comp.PlayerInput = Substitute.For<IPlayerInput>();
 
-            //     comp.PlayerInput.Horizontal.Returns(10f);
+            //     comp.PlayerInput.HorizontalMovement.Returns(10f);
             //     yield return new WaitUntil(() => player.transform.position.x > 0);
 
             //     Object.Destroy(player);
@@ -45,7 +45,7 @@ namespace Tests.Gameplay
             //     Player comp = player.GetComponent<Player>();
             //     comp.PlayerInput = Substitute.For<IPlayerInput>();
 
-            //     comp.PlayerInput.Horizontal.Returns(-10f);
+            //     comp.PlayerInput.HorizontalMovement.Returns(-10f);
             //     yield return new WaitUntil(() => player.transform.position.x < 0);
 
             //     Object.Destroy(player);
