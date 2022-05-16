@@ -18,9 +18,13 @@ namespace Gameplay
         [SerializeField]
         private bool isPlayer;
 
+        [SerializeField]
+        private TurnController turnController;
+
+        private CurrentTurnText turnText;
         private EnergyLabel energyLabel;
 
-        public IPlayerInput PlayerInput { get; set; }
+        public PlayerInput playerInput { get; set; }
 
         private Rigidbody2D _body;
         private Animator _animator;
@@ -38,12 +42,17 @@ namespace Gameplay
         {
             if (isPlayer)
             {
-                PlayerInput = new PlayerInput();
+                playerInput = new PlayerInput();
                 energyLabel = FindObjectOfType<EnergyLabel>();
+                turnText = FindObjectOfType<CurrentTurnText>();
             }
+
             _body = GetComponent<Rigidbody2D>();
             _animator = GetComponent<Animator>();
             _weapon = GetComponent<Weapon>();
+
+            turnController.AddPlayer(this);
+
             AnimationClip[] clips = _animator.runtimeAnimatorController.animationClips;
             foreach (AnimationClip clip in clips)
             {
@@ -60,7 +69,7 @@ namespace Gameplay
             HandleOrientation();
 
             _animator.SetBool(IsJumpingID, _isJumping);
-            if (isPlayer && PlayerInput.Jump && !_isJumping)
+            if (isPlayer && playerInput.Jump && !_isJumping)
             {
                 if (energy > 0)
                 {
@@ -68,17 +77,23 @@ namespace Gameplay
                 }
             }
 
-            if (isPlayer && PlayerInput.Fire && CanAttack())
+            if (isPlayer && playerInput.Fire && CanAttack())
             {
                 _animator.SetTrigger(AttackID);
                 _weapon.Fire();
             }
 
-            if (isPlayer && PlayerInput.ResetEnergy)
+            if (isPlayer && playerInput.ResetEnergy)
             {
                 energy = 100f;
                 UpdateEnergyLabel();
             }
+
+            if (isPlayer && playerInput.NextTurn && playerInput.canDebouncedAction())
+            {
+                NextTurn();
+            }
+
             _weapon.IncrementTimer(Time.deltaTime);
         }
 
@@ -86,9 +101,12 @@ namespace Gameplay
         {
             if (CanMove() && isPlayer)
             {
-                _body.velocity = new Vector2(PlayerInput.Horizontal * speed, _body.velocity.y);
+                _body.velocity = new Vector2(
+                    playerInput.HorizontalMovement * speed,
+                    _body.velocity.y
+                );
 
-                if (Math.Abs(PlayerInput.Horizontal) > 0f)
+                if (Math.Abs(playerInput.HorizontalMovement) > 0f)
                 {
                     energy -= .1f;
                     UpdateEnergyLabel();
@@ -97,7 +115,7 @@ namespace Gameplay
 
             if (isPlayer)
             {
-                _animator.SetBool(IsRunningID, PlayerInput.Horizontal != 0);
+                _animator.SetBool(IsRunningID, playerInput.HorizontalMovement != 0);
             }
         }
 
@@ -111,7 +129,7 @@ namespace Gameplay
 
         private bool CanAttack()
         {
-            return PlayerInput.Horizontal == 0 && !_isJumping && !_weapon.OnCooldown();
+            return playerInput.HorizontalMovement == 0 && !_isJumping && !_weapon.OnCooldown();
         }
 
         private void HandleOrientation()
@@ -121,11 +139,11 @@ namespace Gameplay
                 return;
             }
 
-            if (PlayerInput.Horizontal > 0.01f)
+            if (playerInput.HorizontalMovement > 0.01f)
             {
                 transform.localScale = Vector3.one;
             }
-            else if (PlayerInput.Horizontal < -0.01f)
+            else if (playerInput.HorizontalMovement < -0.01f)
             {
                 transform.localScale = new Vector3(-1, 1, 1);
             }
@@ -161,6 +179,14 @@ namespace Gameplay
                 _animator.SetTrigger(DeathID);
                 Destroy(gameObject, _deathAnimationTime);
             }
+        }
+
+        void NextTurn()
+        {
+            Debug.Log("NextTurn");
+            turnController.NextTurn();
+            turnText.UpdateTurn(turnController.currentTurn);
+            this.playerInput.lastDebouncedActionDTime = Time.time;
         }
 
         public bool IsAlive()
