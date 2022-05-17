@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Gameplay
+namespace Characters
 {
     public class PlayerInput
     {

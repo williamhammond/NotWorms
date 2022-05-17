@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Gameplay
+namespace Combat
 {
     public class Weapon : MonoBehaviour
     {
@@ -27,7 +27,7 @@ namespace Gameplay
             {
                 timer = 0;
                 Transform clone = Instantiate(projectile, firePoint.position, firePoint.rotation);
-                clone.GetComponent<Projectile>().Setup(Mathf.Sign(transform.localScale.x));
+                clone.GetComponent<Combat.Projectile>().Setup(Mathf.Sign(transform.localScale.x));
             }
         }
 
