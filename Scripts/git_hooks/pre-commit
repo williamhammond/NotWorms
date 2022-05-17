@@ -1,4 +1,0 @@
-#!bin/sh
-
-echo "Running: dotnet csharpier ./Assets/Scripts"
-dotnet csharpier ./Assets/Scripts
