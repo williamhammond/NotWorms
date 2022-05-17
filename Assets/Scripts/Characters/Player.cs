@@ -8,6 +8,10 @@ namespace Characters
     [RequireComponent(typeof(Rigidbody2D))]
     public class Player : MonoBehaviour, IDamagable
     {
+        public static event Action<Player> PlayerSpawned;
+        public static event Action<Player> PlayerDespawned;
+        public static event Action EndTurn;
+
         [SerializeField]
         private float speed = 5f;
 
@@ -23,7 +27,6 @@ namespace Characters
         [SerializeField]
         private TurnController turnController;
 
-        private CurrentTurnText turnText;
         private EnergyLabel energyLabel;
 
         public PlayerInput playerInput { get; set; }
@@ -46,14 +49,11 @@ namespace Characters
             {
                 playerInput = new PlayerInput();
                 energyLabel = FindObjectOfType<EnergyLabel>();
-                turnText = FindObjectOfType<CurrentTurnText>();
             }
 
             _body = GetComponent<Rigidbody2D>();
             _animator = GetComponent<Animator>();
             _weapon = GetComponent<Weapon>();
-
-            turnController.AddPlayer(this);
 
             AnimationClip[] clips = _animator.runtimeAnimatorController.animationClips;
             foreach (AnimationClip clip in clips)
@@ -63,6 +63,16 @@ namespace Characters
                     _deathAnimationTime = clip.length;
                 }
             }
+        }
+
+        private void Start()
+        {
+            PlayerSpawned?.Invoke(this);
+        }
+
+        private void OnDestroy()
+        {
+            PlayerDespawned?.Invoke(this);
         }
 
         void Update()
@@ -185,9 +195,7 @@ namespace Characters
 
         void NextTurn()
         {
-            Debug.Log("NextTurn");
-            turnController.NextTurn();
-            turnText.UpdateTurn(turnController.currentTurn);
+            EndTurn?.Invoke();
             this.playerInput.lastDebouncedActionDTime = Time.time;
         }
 

@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using UI;
 using UnityEngine;
 using Utils;
 
@@ -6,19 +8,29 @@ namespace Characters
 {
     public class TurnController : MonoBehaviour
     {
+        public static Action<int> TurnChanged;
+
         [SerializeField]
         public int currentTurn = 0;
 
-        //private Dictionary<int, Player> playerList;
         private List<Player> turnOrder = new();
+        private CurrentTurnText turnText;
 
-        public void AddPlayer(Player player)
+        private void Awake()
         {
-            if (turnOrder.Contains(player))
-                return;
-
-            turnOrder.Add(player);
+            Player.PlayerSpawned += HandlePlayerSpawned;
+            Player.PlayerDespawned += HandlePlayerDespawned;
+            Player.EndTurn += HandleNextTurn;
         }
+
+        public void OnDestroy()
+        {
+            Player.PlayerSpawned -= HandlePlayerSpawned;
+            Player.PlayerDespawned -= HandlePlayerDespawned;
+            Player.EndTurn -= HandleNextTurn;
+        }
+
+        public void AddPlayer(Player player) { }
 
         public void ResetTurnOrder()
         {
@@ -36,13 +48,27 @@ namespace Characters
             return turnOrder[currentTurn];
         }
 
-        public void NextTurn()
+        private void HandlePlayerSpawned(Player player)
+        {
+            if (turnOrder.Contains(player))
+                return;
+
+            turnOrder.Add(player);
+        }
+
+        private void HandlePlayerDespawned(Player player)
+        {
+            turnOrder.Remove(player);
+        }
+
+        private void HandleNextTurn()
         {
             currentTurn++;
             if (currentTurn >= turnOrder.Count)
             {
                 currentTurn = 0;
             }
+            TurnChanged?.Invoke(currentTurn);
         }
     }
 }

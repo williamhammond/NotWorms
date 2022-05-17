@@ -1,3 +1,4 @@
+using Characters;
 using TMPro;
 using UnityEngine;
 
@@ -5,23 +6,17 @@ namespace UI
 {
     public class CurrentTurnText : MonoBehaviour
     {
-        public int currentTurn;
         private TextMeshProUGUI labelText;
 
         private void Awake()
         {
-            currentTurn = 0;
             labelText = GetComponent<TextMeshProUGUI>();
+            TurnController.TurnChanged += HandleTurnChanged;
         }
 
-        void Update()
+        private void HandleTurnChanged(int turn)
         {
-            labelText.text = currentTurn.ToString();
-        }
-
-        public void UpdateTurn(int input)
-        {
-            currentTurn = input;
+            labelText.text = $"{turn}";
         }
     }
 }
