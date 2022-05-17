@@ -22,6 +22,8 @@
 1. Install [Unity Hub](https://unity3d.com/get-unity/download)
    1. Install Unity 2021.3
 2. Install the tools found in the manifest [here](./.config/dotnet-tools.json)
+   1. `dotnet tool restore`
+   2. `dotnet husky install`
 4. Run `git config --global core.autocrlf true`
    1. This helps with the difference between windows and unix line endings (I think)
 5. Add the unity tools directory https://docs.unity3d.com/Manual/SmartMerge.html to your path. We specifically want `UnityYAMLMerge.exe` available to git
