@@ -1,7 +1,8 @@
 using System;
+using Character;
 using UnityEngine;
 
-namespace Gameplay
+namespace Combat
 {
     public class Projectile : MonoBehaviour
     {

@@ -141,10 +141,10 @@ PrefabInstance:
     - target: {fileID: 3058465710767715250, guid: 2f0f76ea492fa6346946676847076255, type: 3}
       propertyPath: turnController
       value: 
-      objectReference: {fileID: 91001228}
+      objectReference: {fileID: 0}
     - target: {fileID: 3866061521777136677, guid: 2f0f76ea492fa6346946676847076255, type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3866061521777136677, guid: 2f0f76ea492fa6346946676847076255, type: 3}
       propertyPath: m_LocalScale.x
@@ -204,51 +204,6 @@ PrefabInstance:
       objectReference: {fileID: 21300000, guid: 20daa800a641d9e4cae18a06630db1ef, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2f0f76ea492fa6346946676847076255, type: 3}
---- !u!1 &91001227
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 91001229}
-  - component: {fileID: 91001228}
-  m_Layer: 0
-  m_Name: TurnController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
---- !u!114 &91001228
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 91001227}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4a08bee7205aa8479ce3cffc43554c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentTurn: 0
---- !u!4 &91001229
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 91001227}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &306858443
 GameObject:
   m_ObjectHideFlags: 0
@@ -262,7 +217,7 @@ GameObject:
   - component: {fileID: 306858445}
   - component: {fileID: 306858444}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: HUD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -336,7 +291,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 306858443}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.63125, y: 1.63125, z: 1.63125}
   m_ConstrainProportionsScale: 0
@@ -344,13 +299,74 @@ RectTransform:
   - {fileID: 1873046468}
   - {fileID: 1178241326}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 652.5, y: 259.5}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 800, y: 318.16092}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1001 &319497746
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 6649221529958838434, guid: 47cd1651fe723c54eb4848028bb97dfe, type: 3}
+      propertyPath: _turnText
+      value: 
+      objectReference: {fileID: 1178241329}
+    - target: {fileID: 6649221529958838435, guid: 47cd1651fe723c54eb4848028bb97dfe, type: 3}
+      propertyPath: m_RootOrder
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6649221529958838435, guid: 47cd1651fe723c54eb4848028bb97dfe, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6649221529958838435, guid: 47cd1651fe723c54eb4848028bb97dfe, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6649221529958838435, guid: 47cd1651fe723c54eb4848028bb97dfe, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6649221529958838435, guid: 47cd1651fe723c54eb4848028bb97dfe, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6649221529958838435, guid: 47cd1651fe723c54eb4848028bb97dfe, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6649221529958838435, guid: 47cd1651fe723c54eb4848028bb97dfe, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6649221529958838435, guid: 47cd1651fe723c54eb4848028bb97dfe, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6649221529958838435, guid: 47cd1651fe723c54eb4848028bb97dfe, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6649221529958838435, guid: 47cd1651fe723c54eb4848028bb97dfe, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6649221529958838435, guid: 47cd1651fe723c54eb4848028bb97dfe, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6649221529958838437, guid: 47cd1651fe723c54eb4848028bb97dfe, type: 3}
+      propertyPath: m_Name
+      value: TurnController
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 47cd1651fe723c54eb4848028bb97dfe, type: 3}
 --- !u!1 &417759337
 GameObject:
   m_ObjectHideFlags: 0
@@ -544,8 +560,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -405.653, y: -156.89507}
-  m_SizeDelta: {x: 2.2193, y: 2.3449}
+  m_AnchoredPosition: {x: 0, y: 3}
+  m_SizeDelta: {x: 1.8169, y: 1.6095}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1178241327
 MonoBehaviour:
@@ -656,7 +672,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c543f25f97b63744b30b52a7b32904a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentTurn: 0
+  labelText: {fileID: 1178241327}
 --- !u!1 &1186470142
 GameObject:
   m_ObjectHideFlags: 0
@@ -722,7 +738,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1873046467
 GameObject:
@@ -760,7 +776,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -396.66, y: -156.77}
+  m_AnchoredPosition: {x: -5, y: 3}
   m_SizeDelta: {x: 7.0053, y: 2.595}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1873046469
@@ -873,6 +889,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   energy: 100
+  labelText: {fileID: 1873046469}
 --- !u!1001 &1481507867024084346
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -947,7 +964,7 @@ PrefabInstance:
     - target: {fileID: 1481507867024084348, guid: 60a5383418e77de418a274d0da6e30e7, type: 3}
       propertyPath: turnController
       value: 
-      objectReference: {fileID: 91001228}
+      objectReference: {fileID: 0}
     - target: {fileID: 3698332608906112910, guid: 60a5383418e77de418a274d0da6e30e7, type: 3}
       propertyPath: timer
       value: 1
@@ -1064,9 +1081,13 @@ PrefabInstance:
       value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 3058465710767715250, guid: 2f0f76ea492fa6346946676847076255, type: 3}
+      propertyPath: isPlayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3058465710767715250, guid: 2f0f76ea492fa6346946676847076255, type: 3}
       propertyPath: turnController
       value: 
-      objectReference: {fileID: 91001228}
+      objectReference: {fileID: 0}
     - target: {fileID: 3866061521777136677, guid: 2f0f76ea492fa6346946676847076255, type: 3}
       propertyPath: m_RootOrder
       value: 3

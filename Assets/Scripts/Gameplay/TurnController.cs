@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using Character;
+using UI;
 using UnityEngine;
 
 namespace Gameplay
@@ -6,42 +8,58 @@ namespace Gameplay
     public class TurnController : MonoBehaviour
     {
         [SerializeField]
-        public int currentTurn = 0;
+        private CurrentTurnText _turnText;
 
-        //private Dictionary<int, Player> playerList;
-        private List<Player> turnOrder = new();
+        private int _currentTurn = 0;
+        private List<Player> _turnOrder = new List<Player>();
 
-        public void AddPlayer(Player player)
+        public void Start()
         {
-            if (turnOrder.Contains(player))
+            Player.PlayerSpawned += HandlePlayerSpawned;
+            Player.PlayerDespawned += HandlePlayerDespawned;
+            Player.EndTurn += NextTurn;
+        }
+
+        public void OnDestroy()
+        {
+            Player.PlayerSpawned -= HandlePlayerSpawned;
+            Player.PlayerDespawned -= HandlePlayerDespawned;
+            Player.EndTurn -= NextTurn;
+        }
+
+        private void HandlePlayerSpawned(Player player)
+        {
+            if (_turnOrder.Contains(player))
                 return;
 
-            turnOrder.Add(player);
+            _turnOrder.Add(player);
+        }
+
+        private void HandlePlayerDespawned(Player player)
+        {
+            _turnOrder.Remove(player);
         }
 
         public void ResetTurnOrder()
         {
-            turnOrder = (List<Player>)turnOrder.Shuffle();
-            currentTurn = 0;
+            _turnOrder.Shuffle();
+            _currentTurn = 0;
         }
 
         public Player CurrentPlayer()
         {
-            if (turnOrder.Count < 1)
+            if (_turnOrder.Count < 1)
             {
                 return null;
             }
 
-            return turnOrder[currentTurn];
+            return _turnOrder[_currentTurn];
         }
 
         public void NextTurn()
         {
-            currentTurn++;
-            if (currentTurn >= turnOrder.Count)
-            {
-                currentTurn = 0;
-            }
+            _currentTurn = _currentTurn++ % _turnOrder.Count;
+            _turnText.UpdateTurn(_currentTurn);
         }
     }
 }

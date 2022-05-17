@@ -1,11 +1,17 @@
 using System;
+using Combat;
+using UI;
 using UnityEngine;
 
-namespace Gameplay
+namespace Character
 {
     [RequireComponent(typeof(Rigidbody2D))]
     public class Player : MonoBehaviour, IDamagable
     {
+        public static event Action<Player> PlayerSpawned;
+        public static event Action<Player> PlayerDespawned;
+        public static event Action EndTurn;
+
         [SerializeField]
         private float speed = 5f;
 
@@ -18,13 +24,11 @@ namespace Gameplay
         [SerializeField]
         private bool isPlayer;
 
-        [SerializeField]
-        private TurnController turnController;
+        private PlayerInput playerInput;
 
-        private CurrentTurnText turnText;
-        private EnergyLabel energyLabel;
+        private bool isActive = false;
 
-        public PlayerInput playerInput { get; set; }
+        private EnergyLabel _energyLabel;
 
         private Rigidbody2D _body;
         private Animator _animator;
@@ -40,18 +44,9 @@ namespace Gameplay
 
         private void Awake()
         {
-            if (isPlayer)
-            {
-                playerInput = new PlayerInput();
-                energyLabel = FindObjectOfType<EnergyLabel>();
-                turnText = FindObjectOfType<CurrentTurnText>();
-            }
-
             _body = GetComponent<Rigidbody2D>();
             _animator = GetComponent<Animator>();
             _weapon = GetComponent<Weapon>();
-
-            turnController.AddPlayer(this);
 
             AnimationClip[] clips = _animator.runtimeAnimatorController.animationClips;
             foreach (AnimationClip clip in clips)
@@ -60,6 +55,21 @@ namespace Gameplay
                 {
                     _deathAnimationTime = clip.length;
                 }
+            }
+
+            if (isPlayer)
+            {
+                _energyLabel = FindObjectOfType<EnergyLabel>();
+                PlayerSpawned?.Invoke(this);
+                playerInput = gameObject.AddComponent<PlayerInput>();
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (isPlayer)
+            {
+                PlayerDespawned?.Invoke(this);
             }
         }
 
@@ -91,7 +101,8 @@ namespace Gameplay
 
             if (isPlayer && playerInput.NextTurn && playerInput.canDebouncedAction())
             {
-                NextTurn();
+                playerInput.lastDebouncedActionDTime = Time.time;
+                EndTurn?.Invoke();
             }
 
             _weapon.IncrementTimer(Time.deltaTime);
@@ -166,7 +177,7 @@ namespace Gameplay
         {
             if (isPlayer)
             {
-                energyLabel.UpdateEnergy(energy);
+                _energyLabel.UpdateEnergy(energy);
             }
         }
 
@@ -179,14 +190,6 @@ namespace Gameplay
                 _animator.SetTrigger(DeathID);
                 Destroy(gameObject, _deathAnimationTime);
             }
-        }
-
-        void NextTurn()
-        {
-            Debug.Log("NextTurn");
-            turnController.NextTurn();
-            turnText.UpdateTurn(turnController.currentTurn);
-            this.playerInput.lastDebouncedActionDTime = Time.time;
         }
 
         public bool IsAlive()

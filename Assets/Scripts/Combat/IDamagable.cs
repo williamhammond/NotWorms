@@ -1,4 +1,4 @@
-﻿namespace Gameplay
+﻿namespace Combat
 {
     public interface IDamagable
     {

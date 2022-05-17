@@ -182,7 +182,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 5
   health: 0
+  energy: 100
   isPlayer: 0
+  playerInput: {fileID: 0}
 --- !u!95 &3723901389949143378
 Animator:
   serializedVersion: 4
