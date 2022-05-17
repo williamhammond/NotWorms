@@ -21,7 +21,7 @@
 0. Clone this repo
 1. Install [Unity Hub](https://unity3d.com/get-unity/download)
    1. Install Unity 2021.3
-2. Install the tools found in the manifest [here](./.config/dotnet-tools.json)
+2. Install the tools found in the manifest [here](./.config/dotnet-tools.json) using [`dotnet tool restore`](https://docs.microsoft.com/en-us/dotnet/core/tools/local-tools-how-to-use)
 3. Run `cp Scripts/git_hooks/pre-commit .git/hooks/pre-commit`. 
    1. Since git_hooks have to be under `.git` they don't get get checked into source control, so we have to manage them in a different repo.
 4. Run `git config --global core.autocrlf true`
