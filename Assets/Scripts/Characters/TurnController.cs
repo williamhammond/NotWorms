@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Utils;
 
-namespace Gameplay
+namespace Characters
 {
     public class TurnController : MonoBehaviour
     {

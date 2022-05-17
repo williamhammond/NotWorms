@@ -1,7 +1,9 @@
 using System;
 using UnityEngine;
+using Combat;
+using UI;
 
-namespace Gameplay
+namespace Characters
 {
     [RequireComponent(typeof(Rigidbody2D))]
     public class Player : MonoBehaviour, IDamagable
