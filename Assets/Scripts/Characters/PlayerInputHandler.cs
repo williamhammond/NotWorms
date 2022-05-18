@@ -2,10 +2,9 @@
 
 namespace Characters
 {
-    public class PlayerInput
+    public class PlayerInputHandler : MonoBehaviour
     {
         public float HorizontalMovement => Input.GetAxis("Horizontal");
-        public bool Jump => Input.GetKey(KeyCode.Space);
         public bool Fire => Input.GetMouseButton(0);
 
         public bool ResetEnergy => Input.GetKey(KeyCode.X);

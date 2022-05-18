@@ -46,6 +46,7 @@ GameObject:
   - component: {fileID: 1481507867024084348}
   - component: {fileID: 3723901389949143378}
   - component: {fileID: 3698332608906112910}
+  - component: {fileID: -4097499778833093570}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -182,7 +183,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 5
   health: 0
+  energy: 100
   isPlayer: 0
+  turnController: {fileID: 0}
 --- !u!95 &3723901389949143378
 Animator:
   serializedVersion: 4
@@ -219,3 +222,37 @@ MonoBehaviour:
   projectile: {fileID: 6643803137438782022, guid: 8054823fb793e7342a258eddbdf5ff63, type: 3}
   timer: 0
   cooldown: 0
+--- !u!114 &-4097499778833093570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3976692843403402619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 6d688d441d2df5c48b9dd176f312339b, type: 3}
+  m_NotificationBehavior: 3
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: cc7bce0d-ad8e-4aca-ad4d-291e8b4612e4
+    m_ActionName: Player/Jump[/Keyboard/space]
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Player
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
