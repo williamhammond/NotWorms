@@ -40,7 +40,6 @@ public class HelpAttribute : PropertyAttribute
     // MessageType is unavailable.
     public readonly MessageType type;
 
-
     /// <summary>
     /// Adds a HelpBox to the Unity property inspector above this field.
     /// </summary>
@@ -72,7 +71,10 @@ public class HelpDrawer : PropertyDrawer
     /// <summary>
     /// A wrapper which returns the PropertyDrawer.attribute field as a HelpAttribute.
     /// </summary>
-    HelpAttribute helpAttribute { get { return (HelpAttribute)attribute; } }
+    HelpAttribute helpAttribute
+    {
+        get { return (HelpAttribute)attribute; }
+    }
 
     /// <summary>
     /// A helper property to check for RangeAttribute.
@@ -82,7 +84,9 @@ public class HelpDrawer : PropertyDrawer
         get
         {
             var attributes = fieldInfo.GetCustomAttributes(typeof(RangeAttribute), true);
-            return attributes != null && attributes.Length > 0 ? (RangeAttribute)attributes[0] : null;
+            return attributes != null && attributes.Length > 0
+              ? (RangeAttribute)attributes[0]
+              : null;
         }
     }
 
@@ -94,10 +98,11 @@ public class HelpDrawer : PropertyDrawer
         get
         {
             var attributes = fieldInfo.GetCustomAttributes(typeof(MultilineAttribute), true);
-            return attributes != null && attributes.Length > 0 ? (MultilineAttribute)attributes[0] : null;
+            return attributes != null && attributes.Length > 0
+              ? (MultilineAttribute)attributes[0]
+              : null;
         }
     }
-
 
     public override float GetPropertyHeight(SerializedProperty prop, GUIContent label)
     {
@@ -128,9 +133,10 @@ public class HelpDrawer : PropertyDrawer
 
         // If the calculated HelpBox is less than our minimum height we use this to calculate the returned
         // height instead.
-        return height > minHeight ? height + baseHeight + addedHeight : minHeight + baseHeight + addedHeight;
+        return height > minHeight
+          ? height + baseHeight + addedHeight
+          : minHeight + baseHeight + addedHeight;
     }
-
 
     public override void OnGUI(Rect position, SerializedProperty prop, GUIContent label)
     {
@@ -146,7 +152,6 @@ public class HelpDrawer : PropertyDrawer
 
         helpPos.height -= baseHeight + marginHeight;
 
-
         if (multiline != null)
         {
             helpPos.height -= addedHeight;
@@ -157,7 +162,6 @@ public class HelpDrawer : PropertyDrawer
 
         position.y += helpPos.height + marginHeight;
         position.height = baseHeight;
-
 
         // If we have a RangeAttribute on our field, we need to handle the PropertyDrawer differently to
         // keep the same style as Unity's default.
@@ -217,14 +221,14 @@ public class HelpDrawer : PropertyDrawer
     }
 }
 #else
-    // Replicate MessageType Enum if we are not in editor as this enum exists in UnityEditor namespace.
-    // This should stop errors being logged the same as Shawn Featherly's commit in the Github repo but I
-    // feel is cleaner than having the conditional directive in the middle of the HelpAttribute constructor.
-    public enum MessageType
-    {
-        None,
-        Info,
-        Warning,
-        Error,
-    }
+// Replicate MessageType Enum if we are not in editor as this enum exists in UnityEditor namespace.
+// This should stop errors being logged the same as Shawn Featherly's commit in the Github repo but I
+// feel is cleaner than having the conditional directive in the middle of the HelpAttribute constructor.
+public enum MessageType
+{
+    None,
+    Info,
+    Warning,
+    Error,
+}
 #endif

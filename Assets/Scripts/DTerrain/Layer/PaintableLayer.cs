@@ -8,11 +8,11 @@ using UnityEngine;
 
 namespace DTerrain
 {
-    public class PaintableLayer<T> : MonoBehaviour, ILayer<T> where T:PaintableChunk
+    public class PaintableLayer<T> : MonoBehaviour, ILayer<T> where T : PaintableChunk
     {
-
-        [field:SerializeField]
+        [field: SerializeField]
         public int ChunkCountX { get; set; }
+
         [field: SerializeField]
         public int ChunkCountY { get; set; }
 
@@ -22,10 +22,10 @@ namespace DTerrain
         [SerializeField]
         protected GameObject chunkTemplate;
 
-        [field:SerializeField]
+        [field: SerializeField]
         public Texture2D OriginalTexture { get; set; }
 
-        [field:SerializeField]
+        [field: SerializeField]
         public int PPU { get; protected set; }
 
         [SerializeField]
@@ -36,14 +36,11 @@ namespace DTerrain
 
         public List<T> Chunks { get; private set; }
 
-
-
         /// <summary>
         /// Spawns all chunks that are required for full functionality and adds them to the list named 'Chunks'.
         /// </summary>
         public virtual void SpawnChunks()
         {
-
             Chunks = new List<T>();
             chunkSizeX = OriginalTexture.width / ChunkCountX;
             chunkSizeY = OriginalTexture.height / ChunkCountY;
@@ -53,10 +50,20 @@ namespace DTerrain
                 for (int j = 0; j < ChunkCountY; j++)
                 {
                     Texture2D piece = new Texture2D(chunkSizeX, chunkSizeY);
-                    piece.filterMode = filterMode; 
-                    piece.SetPixels(0, 0, chunkSizeX, chunkSizeY, OriginalTexture.GetPixels(i * chunkSizeX, j * chunkSizeY, chunkSizeX, chunkSizeY));
+                    piece.filterMode = filterMode;
+                    piece.SetPixels(
+                        0,
+                        0,
+                        chunkSizeX,
+                        chunkSizeY,
+                        OriginalTexture.GetPixels(
+                            i * chunkSizeX,
+                            j * chunkSizeY,
+                            chunkSizeX,
+                            chunkSizeY
+                        )
+                    );
                     piece.Apply();
-
 
                     GameObject c = Instantiate(chunkTemplate);
 
@@ -74,10 +81,12 @@ namespace DTerrain
                     pc.TextureSource.PPU = PPU;
 
                     SpriteRenderer sr = c.GetComponent<SpriteRenderer>();
-                    if(sr==null)
-                        sr=c.AddComponent<SpriteRenderer>();
+                    if (sr == null)
+                        sr = c.AddComponent<SpriteRenderer>();
 
-                    c.transform.position = transform.position + new Vector3(i * (float)chunkSizeX / PPU, j * (float)chunkSizeY / PPU, 0);
+                    c.transform.position =
+                        transform.position
+                        + new Vector3(i * (float)chunkSizeX / PPU, j * (float)chunkSizeY / PPU, 0);
                     c.transform.SetParent(transform);
 
                     Chunks.Add(c.GetComponent<T>());
@@ -87,7 +96,7 @@ namespace DTerrain
 
         public virtual void InitChunks()
         {
-            foreach(PaintableChunk t in Chunks)
+            foreach (PaintableChunk t in Chunks)
             {
                 t.SortingLayerID = SortingLayerID;
                 t.Init();
@@ -112,7 +121,12 @@ namespace DTerrain
             int k = 0;
             foreach (Range r in paintingParameters.Shape.Ranges)
             {
-                PaintColumn(paintingParameters.Position.x + k, paintingParameters.Position.y+r.Min, r, paintingParameters);
+                PaintColumn(
+                    paintingParameters.Position.x + k,
+                    paintingParameters.Position.y + r.Min,
+                    r,
+                    paintingParameters
+                );
                 k++;
             }
         }
@@ -126,7 +140,6 @@ namespace DTerrain
         /// <param name="c">Color to be painted</param>
         private void PaintColumn(int x, int y, Range r, PaintingParameters pp)
         {
-            
             int height = r.Length;
             //We don't use a method for getting chunk id because we need some variables
             int xchunk = x / chunkSizeX;
@@ -139,10 +152,17 @@ namespace DTerrain
             //Iterate over possible chunks vertically that can be contained in painting for this range
             while (true)
             {
-                
-                if (cid >= 0 && cid < Chunks.Count && k + ychunk < ChunkCountY && (k - 1) * chunkSizeY <= height)
+                if (
+                    cid >= 0
+                    && cid < Chunks.Count
+                    && k + ychunk < ChunkCountY
+                    && (k - 1) * chunkSizeY <= height
+                )
                 {
-                    Chunks[cid].Paint(new RectInt(posInChunkX, posInChunkY - k * chunkSizeY, 1, r.Length+1), pp);
+                    Chunks[cid].Paint(
+                        new RectInt(posInChunkX, posInChunkY - k * chunkSizeY, 1, r.Length + 1),
+                        pp
+                    );
                     cid++;
                     k++;
                 }

@@ -13,7 +13,13 @@ namespace DTerrain
         /// </summary>
         public int X;
         public List<Range> Ranges;
-        public Column(int x) { this.X = x; Ranges = new List<Range>(); }
+
+        public Column(int x)
+        {
+            this.X = x;
+            Ranges = new List<Range>();
+        }
+
         public Range AddRange(int mini, int maxi)
         {
             Range r = new Range(mini, maxi);
@@ -31,11 +37,11 @@ namespace DTerrain
         {
             foreach (Range r in Ranges)
             {
-                if (r.isWithin(point) == true) return true;
+                if (r.isWithin(point) == true)
+                    return true;
             }
             return false;
         }
-
 
         /// <param name="point">Point of intrest</param>
         /// <returns>Range that contains a point or null if none has it</returns>
@@ -43,7 +49,8 @@ namespace DTerrain
         {
             foreach (Range r in Ranges)
             {
-                if (r.isWithin(point) == true) return r;
+                if (r.isWithin(point) == true)
+                    return r;
             }
             return null;
         }
@@ -59,8 +66,10 @@ namespace DTerrain
             {
                 Range r1 = new Range(r.Min, pos - 1);
                 Range r2 = new Range(pos + 1, r.Max);
-                if (r1.Length > 0) AddRange(r1);
-                if (r2.Length > 0) AddRange(r2);
+                if (r1.Length > 0)
+                    AddRange(r1);
+                if (r2.Length > 0)
+                    AddRange(r2);
                 Ranges.Remove(r);
             }
         }
@@ -70,7 +79,7 @@ namespace DTerrain
         /// </summary>
         /// <param name="delr">Range to delete a column with</param>
         /// <returns>True if any changes were made</returns>
-        /// 
+        ///
 
         //TODO: TESTS TESTS
         public bool DelRange(Range delr)
@@ -80,7 +89,8 @@ namespace DTerrain
             bool changed = false;
             for (int i = 0; i < Ranges.Count; i++)
             {
-                if (Ranges[i].Min < a && Ranges[i].Max > b) ///0---a-----b----1
+                if (Ranges[i].Min < a && Ranges[i].Max > b)
+                ///0---a-----b----1
                 {
                     changed = true;
                     if (Mathf.Abs(a - b) == 0)
@@ -94,10 +104,10 @@ namespace DTerrain
                     Ranges.Add(new Range(b, Ranges[i].Max));
                     Ranges.Remove(Ranges[i]);
                     break;
-
                 }
 
-                if (Ranges[i].Min >= a && Ranges[i].Max <= b) ///-------a-0---1--b
+                if (Ranges[i].Min >= a && Ranges[i].Max <= b)
+                ///-------a-0---1--b
                 {
                     changed = true;
                     Ranges.Remove(Ranges[i]);
@@ -105,7 +115,8 @@ namespace DTerrain
                     continue;
                 }
 
-                if (Ranges[i].Min < a && Ranges[i].Max <= b && Ranges[i].Max > a) ///-------0--a---1---b
+                if (Ranges[i].Min < a && Ranges[i].Max <= b && Ranges[i].Max > a)
+                ///-------0--a---1---b
                 {
                     changed = true;
                     Ranges.Add(new Range(Ranges[i].Min, a));
@@ -114,7 +125,8 @@ namespace DTerrain
                     continue;
                 }
 
-                if (Ranges[i].Min >= a && Ranges[i].Max > b && Ranges[i].Min < b) ///--a-0----b---1--
+                if (Ranges[i].Min >= a && Ranges[i].Max > b && Ranges[i].Min < b)
+                ///--a-0----b---1--
                 {
                     changed = true;
                     Ranges.Add(new Range(b, Ranges[i].Max));
@@ -130,20 +142,20 @@ namespace DTerrain
         {
             bool summed = false;
             bool changed = false;
-            for(int i = 0; i<Ranges.Count;i++)
+            for (int i = 0; i < Ranges.Count; i++)
             {
                 Range sum = Range.Sum(addr, Ranges[i]);
-                
-                if (sum!=null)
+
+                if (sum != null)
                 {
-                    if (sum.Equals(Ranges[i]) == false) changed = true;
+                    if (sum.Equals(Ranges[i]) == false)
+                        changed = true;
                     Ranges[i] = sum;
                     summed = true;
                     break;
                 }
-
             }
-            if(summed==false)
+            if (summed == false)
             {
                 AddRange(addr);
                 changed = true;
@@ -151,6 +163,5 @@ namespace DTerrain
 
             return changed;
         }
-
     }
 }

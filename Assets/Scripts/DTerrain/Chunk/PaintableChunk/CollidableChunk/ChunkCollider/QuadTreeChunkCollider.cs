@@ -14,18 +14,24 @@ namespace DTerrain
 
         /// <summary>
         /// Prepares all colliders. Deletes previous BoxColliders2D and adds new by using Quadtree. Also fits them correctly with texture.
-        /// 
+        ///
         /// <para>Thanks for /u/idbrii for pointing out overkill in deletion/addition of BoxColliders2D.</para>
         /// </summary>
         /// <param name="pixelData">List of columns (chunk data) to find potential colliding pixels</param>
         public void UpdateColliders(List<Column> pixelData, ITextureSource textureSource)
         {
             PPU = textureSource.PPU;
-            Vector2Int textureSize = new Vector2Int(textureSource.Texture.width, textureSource.Texture.height);
+            Vector2Int textureSize = new Vector2Int(
+                textureSource.Texture.width,
+                textureSource.Texture.height
+            );
 
-            if (rects != null) rects.Clear();
+            if (rects != null)
+                rects.Clear();
 
-            List<BoxCollider2D> colls = new List<BoxCollider2D>(gameObject.GetComponents<BoxCollider2D>());
+            List<BoxCollider2D> colls = new List<BoxCollider2D>(
+                gameObject.GetComponents<BoxCollider2D>()
+            );
 
             rects = new List<Rect>();
 
@@ -44,7 +50,9 @@ namespace DTerrain
                 Vector2 rColliderOffset = new Vector2(r.x + r.size.x / 2, r.y + r.size.y / 2f);
 
                 //Find already existing BoxCollider2D that would fit newly created BoxCollider2D.
-                BoxCollider2D boxC = colls.Find(coll => coll.offset == rColliderOffset && coll.size == r.size);
+                BoxCollider2D boxC = colls.Find(
+                    coll => coll.offset == rColliderOffset && coll.size == r.size
+                );
                 if (!boxC)
                 {
                     //Not found? Create new one.
@@ -57,7 +65,6 @@ namespace DTerrain
                     //Found. It won't be deleted!
                     boxC.enabled = true;
                 }
-
             }
 
             //All BoxColliders2D that were modified and haven't been found are deleted.
@@ -85,12 +92,10 @@ namespace DTerrain
             {
                 for (int j = y; j < y + sizeY; j++)
                 {
-
                     if (chunk[i].isWithin(j))
                         hasAnyGround = true;
                     else
                         hasAnyAir = true;
-
 
                     if (hasAnyAir && hasAnyGround)
                     {
@@ -101,7 +106,6 @@ namespace DTerrain
                         return;
                     }
                 }
-
             }
 
             if (hasAnyGround && !hasAnyAir)
@@ -109,6 +113,5 @@ namespace DTerrain
 
             return;
         }
-
     }
 }

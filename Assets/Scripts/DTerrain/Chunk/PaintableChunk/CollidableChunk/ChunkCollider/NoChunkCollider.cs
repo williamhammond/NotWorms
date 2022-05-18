@@ -9,11 +9,9 @@ namespace DTerrain
 {
     public class NoChunkCollider : MonoBehaviour, IChunkCollider
     {
-
         public void UpdateColliders(List<Column> pixelData, ITextureSource textureSource)
         {
             //Doesnt do anything.
         }
-
     }
 }

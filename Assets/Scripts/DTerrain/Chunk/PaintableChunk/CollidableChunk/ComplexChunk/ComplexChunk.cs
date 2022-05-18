@@ -12,7 +12,6 @@ namespace DTerrain
     /// </summary>
     public class ComplexChunk : CollidableChunk
     {
-
         public List<IChildChunk> ChildChunks { get; private set; }
 
         public override void Init()
@@ -25,6 +24,5 @@ namespace DTerrain
         {
             return base.IsOccupiedAt(at) || ChildChunks.Any(c => c.IsOccupied(at));
         }
-
     }
 }

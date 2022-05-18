@@ -10,13 +10,16 @@ namespace DTerrain
         public int Min;
         public int Max;
 
-        public int Length { 
+        public int Length
+        {
             get
             {
                 int len = Mathf.Abs(Max - Min);
-                if (len <= 0) return 0;
-                else return len;
-            } 
+                if (len <= 0)
+                    return 0;
+                else
+                    return len;
+            }
         }
 
         public bool isWithin(int point)
@@ -68,10 +71,9 @@ namespace DTerrain
                 return new Range(a.Min, Mathf.Max(b.Max, a.Max));
 
             if (b.Min <= a.Min && b.Max >= a.Min) //baXAX
-                return new Range(b.Min, Mathf.Max(a.Max,b.Max));
+                return new Range(b.Min, Mathf.Max(a.Max, b.Max));
 
             return null;
         }
-
     }
 }

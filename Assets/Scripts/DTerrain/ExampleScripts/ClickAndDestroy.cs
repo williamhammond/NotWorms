@@ -16,6 +16,7 @@ namespace DTerrain
     {
         [SerializeField]
         protected int circleSize = 16;
+
         [SerializeField]
         protected int outlineSize = 4;
 
@@ -24,6 +25,7 @@ namespace DTerrain
 
         [SerializeField]
         protected BasicPaintableLayer primaryLayer;
+
         [SerializeField]
         protected BasicPaintableLayer secondaryLayer;
 
@@ -40,51 +42,65 @@ namespace DTerrain
                 OnLeftMouseButtonClick();
             }
 
-            if(Input.GetMouseButton(1))
+            if (Input.GetMouseButton(1))
             {
                 OnRightMouseButtonClick();
             }
-
-            
         }
 
         protected virtual void OnLeftMouseButtonClick()
         {
+            Vector3 p =
+                Camera.main.ScreenToWorldPoint(Input.mousePosition)
+                - primaryLayer.transform.position;
 
-            Vector3 p = Camera.main.ScreenToWorldPoint(Input.mousePosition) - primaryLayer.transform.position;
+            primaryLayer?.Paint(
+                new PaintingParameters()
+                {
+                    Color = Color.clear,
+                    Position = new Vector2Int(
+                        (int)(p.x * primaryLayer.PPU) - circleSize,
+                        (int)(p.y * primaryLayer.PPU) - circleSize
+                    ),
+                    Shape = destroyCircle,
+                    PaintingMode = PaintingMode.REPLACE_COLOR,
+                    DestructionMode = DestructionMode.DESTROY
+                }
+            );
 
-            primaryLayer?.Paint(new PaintingParameters() 
-            { 
-                Color = Color.clear, 
-                Position = new Vector2Int((int)(p.x * primaryLayer.PPU) - circleSize, (int)(p.y * primaryLayer.PPU) - circleSize), 
-                Shape = destroyCircle, 
-                PaintingMode=PaintingMode.REPLACE_COLOR,
-                DestructionMode = DestructionMode.DESTROY
-            });
-
-            secondaryLayer?.Paint(new PaintingParameters() 
-            { 
-                Color = new Color(0.0f,0.0f,0.0f,0.75f), 
-                Position = new Vector2Int((int)(p.x * secondaryLayer.PPU) - circleSize-outlineSize, (int)(p.y * secondaryLayer.PPU) - circleSize-outlineSize), 
-                Shape = outlineCircle, 
-                PaintingMode=PaintingMode.REPLACE_COLOR,
-                DestructionMode = DestructionMode.NONE
-            });
-            
+            secondaryLayer?.Paint(
+                new PaintingParameters()
+                {
+                    Color = new Color(0.0f, 0.0f, 0.0f, 0.75f),
+                    Position = new Vector2Int(
+                        (int)(p.x * secondaryLayer.PPU) - circleSize - outlineSize,
+                        (int)(p.y * secondaryLayer.PPU) - circleSize - outlineSize
+                    ),
+                    Shape = outlineCircle,
+                    PaintingMode = PaintingMode.REPLACE_COLOR,
+                    DestructionMode = DestructionMode.NONE
+                }
+            );
         }
 
         protected virtual void OnRightMouseButtonClick()
         {
-            Vector3 p = Camera.main.ScreenToWorldPoint(Input.mousePosition) - primaryLayer.transform.position;
-            primaryLayer?.Paint(new PaintingParameters()
-            {
-                Color = Color.black,
-                Position = new Vector2Int((int)(p.x * primaryLayer.PPU) - circleSize, (int)(p.y * primaryLayer.PPU) - circleSize),
-                Shape = destroyCircle,
-                PaintingMode = PaintingMode.REPLACE_COLOR,
-                DestructionMode = DestructionMode.BUILD
-            });
-
+            Vector3 p =
+                Camera.main.ScreenToWorldPoint(Input.mousePosition)
+                - primaryLayer.transform.position;
+            primaryLayer?.Paint(
+                new PaintingParameters()
+                {
+                    Color = Color.black,
+                    Position = new Vector2Int(
+                        (int)(p.x * primaryLayer.PPU) - circleSize,
+                        (int)(p.y * primaryLayer.PPU) - circleSize
+                    ),
+                    Shape = destroyCircle,
+                    PaintingMode = PaintingMode.REPLACE_COLOR,
+                    DestructionMode = DestructionMode.BUILD
+                }
+            );
         }
     }
 }

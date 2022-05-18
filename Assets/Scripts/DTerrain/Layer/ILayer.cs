@@ -8,7 +8,7 @@ namespace DTerrain
     /// Interface for a single Layer created of chunks.
     /// </summary>
     /// <typeparam name="ChunkType"></typeparam>
-    public interface ILayer<T> where T:IChunk
+    public interface ILayer<T> where T : IChunk
     {
         int ChunkCountX { get; set; }
         int ChunkCountY { get; set; }
@@ -17,4 +17,3 @@ namespace DTerrain
         void SpawnChunks();
     }
 }
-

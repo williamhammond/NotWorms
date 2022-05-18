@@ -1,5 +1,5 @@
-﻿
-using UnityEngine;
+﻿using UnityEngine;
+
 namespace DTerrain
 {
     public static class UnityExtensions
@@ -31,7 +31,5 @@ namespace DTerrain
 
             return false;
         }
-
     }
-
 }

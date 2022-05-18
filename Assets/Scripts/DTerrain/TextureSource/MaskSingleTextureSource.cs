@@ -8,7 +8,7 @@ namespace DTerrain
     /// Basic SingleTextureSource that has only one texture and keeps a copy of starting state of that texture.
     /// </summary>
     [RequireComponent(typeof(SpriteMask), typeof(SpriteRenderer))]
-    public class MaskSingleTextureSource: SingleTextureSource
+    public class MaskSingleTextureSource : SingleTextureSource
     {
         public override void SetUpToRenderer(SpriteRenderer spriteRenderer)
         {

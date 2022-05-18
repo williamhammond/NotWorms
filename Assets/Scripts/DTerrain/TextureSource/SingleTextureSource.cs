@@ -7,9 +7,9 @@ namespace DTerrain
     /// <summary>
     /// Basic SingleTextureSource that has only one texture and keeps a copy of starting state of that texture.
     /// </summary>
-    public class SingleTextureSource: MonoBehaviour, ITextureSource
+    public class SingleTextureSource : MonoBehaviour, ITextureSource
     {
-        [field:SerializeField]
+        [field: SerializeField]
         public Texture2D OriginalTexture { get; private set; }
 
         private Texture2D texture;
@@ -30,9 +30,6 @@ namespace DTerrain
 
         public int PPU { get; set; }
 
-        public virtual void SetUpToRenderer(SpriteRenderer spriteRenderer)
-        {
-            
-        }
+        public virtual void SetUpToRenderer(SpriteRenderer spriteRenderer) { }
     }
 }

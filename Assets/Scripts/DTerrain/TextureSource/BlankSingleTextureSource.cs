@@ -8,7 +8,7 @@ namespace DTerrain
     /// <summary>
     /// Blank Texture that will be filled with a color whenever you set any texture to it. (Remains only size of set texture, but not it's color data).
     /// </summary>
-    public class BlankSingleTextureSource: SingleTextureSource
+    public class BlankSingleTextureSource : SingleTextureSource
     {
         [SerializeField]
         private Color startingColor;
@@ -33,6 +33,5 @@ namespace DTerrain
                 OriginalTexture.Apply();
             }
         }
-
     }
 }

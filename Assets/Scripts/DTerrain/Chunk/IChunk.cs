@@ -12,4 +12,3 @@ namespace DTerrain
         bool IsOccupied(Vector2Int at);
     }
 }
-

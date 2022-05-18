@@ -9,7 +9,6 @@ namespace DTerrain
     /// </summary>
     public class Shape
     {
-
         public List<Range> Ranges;
 
         public int Width { get; private set; }
@@ -46,14 +45,16 @@ namespace DTerrain
                 int max = 0;
                 for (int j = 0; j <= 2 * r; j++)
                 {
-                    if (Mathf.Sqrt((centerX - i) * (centerX - i) + (centerY - j) * (centerY - j)) < r)
+                    if (
+                        Mathf.Sqrt((centerX - i) * (centerX - i) + (centerY - j) * (centerY - j))
+                        < r
+                    )
                     {
                         if (down == false)
                         {
                             down = true;
                             min = j;
                         }
-
                     }
                     else
                     {
@@ -61,18 +62,14 @@ namespace DTerrain
                         {
                             max = j;
                             break;
-
                         }
-
                     }
-
                 }
                 if (down)
                 {
                     Range range = new Range(min, max);
                     s.Ranges.Add(range);
                 }
-
             }
 
             return s;
@@ -82,9 +79,9 @@ namespace DTerrain
         {
             Shape s = new Shape(w, h);
 
-            for(int i = 0; i<w;i++)
+            for (int i = 0; i < w; i++)
             {
-                s.Ranges.Add(new Range(0, h-1)); //0,1,2...h-1
+                s.Ranges.Add(new Range(0, h - 1)); //0,1,2...h-1
             }
 
             return s;

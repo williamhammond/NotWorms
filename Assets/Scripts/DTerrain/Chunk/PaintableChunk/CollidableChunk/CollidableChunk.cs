@@ -28,7 +28,7 @@ namespace DTerrain
         {
             bool b = base.Paint(r, pp);
 
-            if(pp.DestructionMode==DestructionMode.DESTROY)
+            if (pp.DestructionMode == DestructionMode.DESTROY)
                 DeleteFromColumns(r);
             if (pp.DestructionMode == DestructionMode.BUILD)
                 AddToColumns(r);
@@ -39,7 +39,7 @@ namespace DTerrain
         public override void Update()
         {
             base.Update();
-            if(colliderChanged)
+            if (colliderChanged)
             {
                 chunkCollider?.UpdateColliders(columns, TextureSource);
                 colliderChanged = false;
@@ -58,26 +58,36 @@ namespace DTerrain
         private void DeleteFromColumns(RectInt rect)
         {
             RectInt common;
-            rect.Intersects(new RectInt(0, 0, TextureSource.Texture.width, TextureSource.Texture.height), out common);
+            rect.Intersects(
+                new RectInt(0, 0, TextureSource.Texture.width, TextureSource.Texture.height),
+                out common
+            );
 
-            for(int i = 0; i<common.width;i++)
+            for (int i = 0; i < common.width; i++)
             {
-                colliderChanged = columns[common.x + i].DelRange(new Range(common.y-1, common.y+common.height)) || colliderChanged;
+                colliderChanged =
+                    columns[common.x + i].DelRange(
+                        new Range(common.y - 1, common.y + common.height)
+                    ) || colliderChanged;
             }
         }
 
         private void AddToColumns(RectInt rect)
         {
             RectInt common;
-            rect.Intersects(new RectInt(0, 0, TextureSource.Texture.width, TextureSource.Texture.height), out common);
+            rect.Intersects(
+                new RectInt(0, 0, TextureSource.Texture.width, TextureSource.Texture.height),
+                out common
+            );
 
             for (int i = 0; i < common.width; i++)
             {
-                colliderChanged = columns[common.x + i].SumRange(new Range(common.y, common.y + common.height-1)) || colliderChanged;
+                colliderChanged =
+                    columns[common.x + i].SumRange(
+                        new Range(common.y, common.y + common.height - 1)
+                    ) || colliderChanged;
             }
         }
-
-
 
         /// <summary>
         /// Using terrainTexture creates a list of ranges (tiles that are egible for a collider).
@@ -95,7 +105,10 @@ namespace DTerrain
                 {
                     int potentialMin = y;
                     int potentialMax = y - 1;
-                    while (y < TextureSource.Texture.height && TextureSource.Texture.GetPixel(x, y).a > AlphaTreshold)
+                    while (
+                        y < TextureSource.Texture.height
+                        && TextureSource.Texture.GetPixel(x, y).a > AlphaTreshold
+                    )
                     {
                         y++;
                         potentialMax++;
