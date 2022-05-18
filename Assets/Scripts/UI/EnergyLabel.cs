@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -14,7 +15,7 @@ namespace UI
 
         public void SetEnergy(float input)
         {
-            labelText.text = $"{input}";
+            labelText.text = $"Energy: {Math.Round(input)}";
         }
     }
 }

@@ -16,7 +16,7 @@ namespace UI
 
         private void HandleTurnChanged(int turn)
         {
-            labelText.text = $"{turn}";
+            labelText.text = $"Turn: {turn}";
         }
     }
 }
