@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Combat
 {
@@ -16,6 +17,16 @@ namespace Combat
         [SerializeField]
         private float cooldown;
 
+        private void Awake()
+        {
+            timer = Mathf.Infinity;
+        }
+
+        private void Update()
+        {
+            timer += Time.deltaTime;
+        }
+
         public bool OnCooldown()
         {
             return timer < cooldown;
@@ -29,16 +40,6 @@ namespace Combat
                 Transform clone = Instantiate(projectile, firePoint.position, firePoint.rotation);
                 clone.GetComponent<Combat.Projectile>().Setup(Mathf.Sign(transform.localScale.x));
             }
-        }
-
-        public void IncrementTimer(float delta)
-        {
-            timer += delta;
-        }
-
-        private void Awake()
-        {
-            timer = Mathf.Infinity;
         }
     }
 }

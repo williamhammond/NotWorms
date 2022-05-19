@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UI;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Utils;
 
 namespace Characters
@@ -15,22 +16,44 @@ namespace Characters
 
         private List<Player> turnOrder = new();
         private CurrentTurnText turnText;
+        private PlayerInput _playerInput;
+
+        public float lastDebouncedActionDTime = Time.time;
+        private float debouncedActionThreshold = .5f;
+
+        private bool CanDebouncedAction()
+        {
+            return (Time.time - lastDebouncedActionDTime) > debouncedActionThreshold;
+        }
 
         private void Awake()
         {
+            _playerInput = GetComponent<PlayerInput>();
+
+            _playerInput.actions["Player/EndTurn"].performed += HandleNextTurn;
+
             Player.PlayerSpawned += HandlePlayerSpawned;
             Player.PlayerDespawned += HandlePlayerDespawned;
-            Player.EndTurn += HandleNextTurn;
         }
 
-        public void OnDestroy()
+        private void OnDestroy()
         {
             Player.PlayerSpawned -= HandlePlayerSpawned;
             Player.PlayerDespawned -= HandlePlayerDespawned;
-            Player.EndTurn -= HandleNextTurn;
         }
 
-        public void AddPlayer(Player player) { }
+        private void HandleNextTurn(InputAction.CallbackContext context)
+        {
+            if (CanDebouncedAction())
+            {
+                currentTurn++;
+                if (currentTurn >= turnOrder.Count)
+                {
+                    currentTurn = 0;
+                }
+                TurnChanged?.Invoke(currentTurn);
+            }
+        }
 
         public void ResetTurnOrder()
         {
@@ -59,16 +82,6 @@ namespace Characters
         private void HandlePlayerDespawned(Player player)
         {
             turnOrder.Remove(player);
-        }
-
-        private void HandleNextTurn()
-        {
-            currentTurn++;
-            if (currentTurn >= turnOrder.Count)
-            {
-                currentTurn = 0;
-            }
-            TurnChanged?.Invoke(currentTurn);
         }
     }
 }

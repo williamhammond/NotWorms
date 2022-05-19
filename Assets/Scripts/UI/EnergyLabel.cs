@@ -5,23 +5,16 @@ namespace UI
 {
     public class EnergyLabel : MonoBehaviour
     {
-        public float energy;
         private TextMeshProUGUI labelText;
 
         private void Awake()
         {
-            energy = 100f;
             labelText = GetComponent<TextMeshProUGUI>();
         }
 
-        void Update()
+        public void SetEnergy(float input)
         {
-            labelText.text = energy.ToString();
-        }
-
-        public void UpdateEnergy(float input)
-        {
-            energy = input;
+            labelText.text = $"{input}";
         }
     }
 }
