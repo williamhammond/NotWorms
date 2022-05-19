@@ -47,6 +47,8 @@ GameObject:
   - component: {fileID: 3723901389949143378}
   - component: {fileID: 3698332608906112910}
   - component: {fileID: -4097499778833093570}
+  - component: {fileID: 6208858638717055992}
+  - component: {fileID: 5509620467498699867}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -181,11 +183,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59b13c9bc395f3947a46e19c8fccfe8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
   health: 0
-  energy: 100
-  isPlayer: 0
-  turnController: {fileID: 0}
 --- !u!95 &3723901389949143378
 Animator:
   serializedVersion: 4
@@ -256,3 +254,28 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &6208858638717055992
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3976692843403402619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d38fc01cca24f50a08c290d59dd65f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 5
+--- !u!114 &5509620467498699867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3976692843403402619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 069fdc5c8fde477e8a6eae264b826190, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
