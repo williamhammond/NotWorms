@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace DTerrain
 {
@@ -18,6 +15,7 @@ namespace DTerrain
         public virtual void Init()
         {
             SpriteRenderer = GetComponent<SpriteRenderer>();
+            SpriteRenderer.sortingOrder = -10;
             SpriteRenderer.sprite = Sprite.Create(
                 TextureSource.Texture,
                 new Rect(0, 0, TextureSource.Texture.width, TextureSource.Texture.height),
@@ -27,8 +25,6 @@ namespace DTerrain
                 SpriteMeshType.FullRect
             );
             TextureSource.SetUpToRenderer(SpriteRenderer);
-
-            SpriteRenderer.sortingLayerID = SortingLayerID;
         }
 
         public virtual bool Paint(RectInt r, PaintingParameters pp)

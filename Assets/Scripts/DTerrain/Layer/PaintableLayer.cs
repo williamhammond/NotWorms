@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace DTerrain
@@ -86,7 +81,7 @@ namespace DTerrain
 
                     c.transform.position =
                         transform.position
-                        + new Vector3(i * (float)chunkSizeX / PPU, j * (float)chunkSizeY / PPU, 0);
+                        + new Vector3(i * (float)chunkSizeX / PPU, j * (float)chunkSizeY / PPU, 10);
                     c.transform.SetParent(transform);
 
                     Chunks.Add(c.GetComponent<T>());
@@ -98,7 +93,7 @@ namespace DTerrain
         {
             foreach (PaintableChunk t in Chunks)
             {
-                t.SortingLayerID = SortingLayerID;
+                t.SortingLayerID = -10;
                 t.Init();
             }
         }
