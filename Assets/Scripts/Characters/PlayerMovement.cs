@@ -21,11 +21,16 @@ namespace Characters
 
         private void Awake()
         {
-            _playerInput = GetComponent<PlayerInput>();
-            _animator = GetComponent<Animator>();
-            _body = GetComponent<Rigidbody2D>();
+            _animator = GetComponentInParent<Animator>();
+            _body = GetComponentInParent<Rigidbody2D>();
 
+            _playerInput = GetComponentInParent<PlayerInput>();
             _playerInput.actions["Player/Jump"].performed += HandleJump;
+        }
+
+        private void OnDestroy()
+        {
+            _playerInput.actions["Player/Jump"].performed -= HandleJump;
         }
 
         private void FixedUpdate()
@@ -33,9 +38,10 @@ namespace Characters
             HandleMovement(_playerInput.actions["Player/Movement"].ReadValue<float>());
         }
 
-        private void OnCollisionEnter2D(Collision2D collision)
+        private void OnDisable()
         {
             _animator.SetBool(IsJumpingID, false);
+            _animator.SetBool(IsRunningID, false);
         }
 
         private void HandleMovement(float movement)
@@ -44,11 +50,11 @@ namespace Characters
 
             if (movement > 0.01f)
             {
-                transform.localScale = Vector3.one;
+                _body.transform.localScale = Vector3.one;
             }
             else if (movement < -0.01f)
             {
-                transform.localScale = new Vector3(-1, 1, 1);
+                _body.transform.localScale = new Vector3(-1, 1, 1);
             }
             _animator.SetBool(IsRunningID, Mathf.Abs(_body.velocity.x) > 0.1f);
         }
@@ -59,7 +65,13 @@ namespace Characters
             {
                 _body.AddForce(Vector2.up * speed, ForceMode2D.Impulse);
                 _animator.SetBool(IsJumpingID, true);
+                _isJumping = true;
             }
+        }
+
+        private void OnCollisionEnter2D(Collision2D collision)
+        {
+            _animator.SetBool(IsJumpingID, false);
         }
     }
 }

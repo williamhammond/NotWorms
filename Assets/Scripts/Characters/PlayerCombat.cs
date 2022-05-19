@@ -1,5 +1,4 @@
-﻿using System;
-using Combat;
+﻿using Combat;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -16,12 +15,17 @@ namespace Characters
 
         private void Awake()
         {
-            _playerInput = GetComponent<PlayerInput>();
+            _playerInput = GetComponentInParent<PlayerInput>();
             _playerInput.actions["Player/Fire"].performed += HandleFire;
 
-            _animator = GetComponent<Animator>();
-            _weapon = GetComponent<Weapon>();
-            _body = GetComponent<Rigidbody2D>();
+            _animator = GetComponentInParent<Animator>();
+            _weapon = GetComponentInParent<Weapon>();
+            _body = GetComponentInParent<Rigidbody2D>();
+        }
+
+        private void OnDestroy()
+        {
+            _playerInput.actions["Player/Fire"].performed -= HandleFire;
         }
 
         private void HandleFire(InputAction.CallbackContext context)

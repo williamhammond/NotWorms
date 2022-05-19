@@ -7,6 +7,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 119173717846181074, guid: 60a5383418e77de418a274d0da6e30e7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 817833974993414891, guid: 60a5383418e77de418a274d0da6e30e7, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -51,6 +55,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1226746124160982966, guid: 60a5383418e77de418a274d0da6e30e7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1480361385888511750, guid: 60a5383418e77de418a274d0da6e30e7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1481507867024084348, guid: 60a5383418e77de418a274d0da6e30e7, type: 3}
       propertyPath: health
       value: 100
@@ -70,6 +82,10 @@ PrefabInstance:
     - target: {fileID: 3976692843403402619, guid: 60a5383418e77de418a274d0da6e30e7, type: 3}
       propertyPath: m_Name
       value: Enemy Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 4987473688010168260, guid: 60a5383418e77de418a274d0da6e30e7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6208858638717055992, guid: 60a5383418e77de418a274d0da6e30e7, type: 3}
       propertyPath: m_Enabled

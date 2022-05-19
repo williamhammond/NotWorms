@@ -13,6 +13,9 @@ namespace Characters
         [SerializeField]
         private float health = 100f;
 
+        private PlayerMovement _playerMovement;
+        private PlayerCombat _playerCombat;
+
         private Animator _animator;
         private float _deathAnimationTime;
 
@@ -21,6 +24,8 @@ namespace Characters
         private void Awake()
         {
             _animator = GetComponent<Animator>();
+            _playerCombat = GetComponentInChildren<PlayerCombat>();
+            _playerMovement = GetComponentInChildren<PlayerMovement>();
 
             AnimationClip[] clips = _animator.runtimeAnimatorController.animationClips;
             foreach (AnimationClip clip in clips)
@@ -30,6 +35,14 @@ namespace Characters
                     _deathAnimationTime = clip.length;
                 }
             }
+
+            PlayerEnergy.EnergyExhausted += HandleEnergyExhausted;
+        }
+
+        private void HandleEnergyExhausted()
+        {
+            _playerMovement.gameObject.SetActive(false);
+            _playerCombat.gameObject.SetActive(false);
         }
 
         private void Start()

@@ -21,7 +21,7 @@ namespace Characters
         public float lastDebouncedActionDTime = Time.time;
         private float debouncedActionThreshold = .5f;
 
-        public bool canDebouncedAction()
+        private bool CanDebouncedAction()
         {
             return (Time.time - lastDebouncedActionDTime) > debouncedActionThreshold;
         }
@@ -36,7 +36,7 @@ namespace Characters
             Player.PlayerDespawned += HandlePlayerDespawned;
         }
 
-        public void OnDestroy()
+        private void OnDestroy()
         {
             Player.PlayerSpawned -= HandlePlayerSpawned;
             Player.PlayerDespawned -= HandlePlayerDespawned;
@@ -44,7 +44,7 @@ namespace Characters
 
         private void HandleNextTurn(InputAction.CallbackContext context)
         {
-            if (canDebouncedAction())
+            if (CanDebouncedAction())
             {
                 currentTurn++;
                 if (currentTurn >= turnOrder.Count)
@@ -54,8 +54,6 @@ namespace Characters
                 TurnChanged?.Invoke(currentTurn);
             }
         }
-
-        public void AddPlayer(Player player) { }
 
         public void ResetTurnOrder()
         {
