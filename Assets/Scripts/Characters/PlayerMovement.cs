@@ -64,9 +64,9 @@ namespace Characters
 
         private void HandleRocket(InputAction.CallbackContext context)
         {
+            Debug.Log("rocketing " + _isRocketing + " state " + _animator.GetBool(IsRocketingID));
             if (!_isRocketing)
             {
-                Debug.Log("rocketing");
                 _isRocketing = true;
 
                 //https://stackoverflow.com/questions/34250868/unity-addexplosionforce-to-2d
@@ -92,6 +92,7 @@ namespace Characters
         private void OnCollisionEnter2D(Collision2D collision)
         {
             _animator.SetBool(IsJumpingID, false);
+            _animator.SetBool(IsRocketingID, false);
         }
     }
 }
