@@ -15,11 +15,11 @@ namespace Characters
         public int currentTurn = 0;
 
         private List<Player> turnOrder = new();
-        private CurrentTurnText turnText;
+        private readonly CurrentTurnText turnText;
         private PlayerInput _playerInput;
 
-        public float lastDebouncedActionDTime = Time.time;
-        private float debouncedActionThreshold = .5f;
+        public float lastDebouncedActionDTime;
+        private readonly float debouncedActionThreshold = .5f;
 
         private bool CanDebouncedAction()
         {
@@ -28,6 +28,8 @@ namespace Characters
 
         private void Awake()
         {
+            lastDebouncedActionDTime = Time.time;
+
             _playerInput = GetComponent<PlayerInput>();
 
             _playerInput.actions["Player/EndTurn"].performed += HandleNextTurn;
