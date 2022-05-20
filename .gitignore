@@ -51,3 +51,5 @@ sysinfo.txt
 *.unitypackage
 
 .vsconfig
+UserSettings/
+.husky/*
