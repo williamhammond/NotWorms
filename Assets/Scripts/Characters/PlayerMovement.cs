@@ -15,11 +15,9 @@ namespace Characters
         private Animator _animator;
 
         private bool _isJumping = false;
-        private bool _isRocketing = false;
 
         private static readonly int IsRunningID = Animator.StringToHash("isRunning");
         private static readonly int IsJumpingID = Animator.StringToHash("isJumping");
-        private static readonly int IsRocketingID = Animator.StringToHash("isRocketing");
 
         private void Awake()
         {
@@ -28,7 +26,9 @@ namespace Characters
 
             _playerInput = GetComponentInParent<PlayerInput>();
             _playerInput.actions["Player/Jump"].performed += HandleJump;
-            _playerInput.actions["Player/Rocket"].performed += HandleRocket;
+
+            RocketJump rj = new RocketJump(_animator, _body);
+            _playerInput.actions["Player/Rocket"].performed += rj.Trigger;
         }
 
         private void OnDestroy()
@@ -62,23 +62,6 @@ namespace Characters
             _animator.SetBool(IsRunningID, Mathf.Abs(_body.velocity.x) > 0.1f);
         }
 
-        private void HandleRocket(InputAction.CallbackContext context)
-        {
-            Debug.Log("rocketing " + _isRocketing + " state " + _animator.GetBool(IsRocketingID));
-            if (!_isRocketing)
-            {
-                _isRocketing = true;
-
-                //https://stackoverflow.com/questions/34250868/unity-addexplosionforce-to-2d
-                Vector2 explosionDir = Vector2.up;
-                int upwardsModifier = 500;
-                float explosionDistance = explosionDir.magnitude;
-                explosionDir.y += upwardsModifier;
-                _body.AddForce(explosionDir);
-                _animator.SetBool(IsRocketingID, true);
-            }
-        }
-
         private void HandleJump(InputAction.CallbackContext context)
         {
             if (!_isJumping)
@@ -92,7 +75,6 @@ namespace Characters
         private void OnCollisionEnter2D(Collision2D collision)
         {
             _animator.SetBool(IsJumpingID, false);
-            _animator.SetBool(IsRocketingID, false);
         }
     }
 }
