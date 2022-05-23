@@ -37,22 +37,43 @@ namespace Characters
             }
 
             PlayerEnergy.EnergyExhausted += HandleEnergyExhausted;
-        }
-
-        private void HandleEnergyExhausted()
-        {
-            _playerMovement.gameObject.SetActive(false);
-            _playerCombat.gameObject.SetActive(false);
-        }
-
-        private void Start()
-        {
-            PlayerSpawned?.Invoke(this);
+            PlayerEnergy.EnergyReset += HandleEnergyReset;
         }
 
         private void OnDestroy()
         {
             PlayerDespawned?.Invoke(this);
+            PlayerEnergy.EnergyExhausted -= HandleEnergyExhausted;
+            PlayerEnergy.EnergyReset -= HandleEnergyReset;
+        }
+
+        private void HandleEnergyExhausted()
+        {
+            if (_playerMovement)
+            {
+                _playerMovement.gameObject.SetActive(false);
+            }
+            if (_playerCombat)
+            {
+                _playerCombat.gameObject.SetActive(false);
+            }
+        }
+
+        private void HandleEnergyReset()
+        {
+            if (_playerMovement)
+            {
+                _playerMovement.gameObject.SetActive(true);
+            }
+            if (_playerCombat)
+            {
+                _playerCombat.gameObject.SetActive(true);
+            }
+        }
+
+        private void Start()
+        {
+            PlayerSpawned?.Invoke(this);
         }
 
         public float GetHealth()
