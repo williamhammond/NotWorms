@@ -5,7 +5,6 @@ public class MenuController : MonoBehaviour
 {
     public void PlayGame()
     {
-        Debug.Log("PlayGame button");
         SceneManager.LoadScene("Sandbox");
     }
 
