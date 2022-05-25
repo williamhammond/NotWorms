@@ -11,6 +11,7 @@ namespace Characters
         private float energy = 100f;
 
         public static event Action EnergyExhausted;
+        public static event Action EnergyReset;
 
         private EnergyLabel _energyLabel;
         private PlayerInput _playerInput;
@@ -20,7 +21,7 @@ namespace Characters
         {
             _energyLabel = FindObjectOfType<EnergyLabel>();
 
-            _playerInput = GetComponent<PlayerInput>();
+            _playerInput = GetComponentInParent<PlayerInput>();
 
             _playerInput.actions["Player/Fire"].performed += HandleFire;
             _playerInput.actions["Player/ResetEnergy"].performed += ResetEnergy;
@@ -56,7 +57,9 @@ namespace Characters
 
         private void ResetEnergy(InputAction.CallbackContext context)
         {
+            EnergyReset?.Invoke();
             energy = 100f;
+            _energyLabel.SetEnergy(energy);
         }
 
         private void HandleFire(InputAction.CallbackContext context)

@@ -202,6 +202,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 20daa800a641d9e4cae18a06630db1ef, type: 3}
+    - target: {fileID: 8141005924980681431, guid: 2f0f76ea492fa6346946676847076255, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2f0f76ea492fa6346946676847076255, type: 3}
 --- !u!1 &91001227
@@ -1107,18 +1111,6 @@ PrefabInstance:
       value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 817833974993414891, guid: 60a5383418e77de418a274d0da6e30e7, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 817833974993414891, guid: 60a5383418e77de418a274d0da6e30e7, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 817833974993414891, guid: 60a5383418e77de418a274d0da6e30e7, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 817833974993414891, guid: 60a5383418e77de418a274d0da6e30e7, type: 3}
       propertyPath: m_LocalPosition.x
       value: -7.7
       objectReference: {fileID: 0}
@@ -1158,45 +1150,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1481507867024084348, guid: 60a5383418e77de418a274d0da6e30e7, type: 3}
-      propertyPath: health
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 1481507867024084348, guid: 60a5383418e77de418a274d0da6e30e7, type: 3}
-      propertyPath: isPlayer
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1481507867024084348, guid: 60a5383418e77de418a274d0da6e30e7, type: 3}
-      propertyPath: turnController
-      value: 
-      objectReference: {fileID: 91001228}
-    - target: {fileID: 3698332608906112910, guid: 60a5383418e77de418a274d0da6e30e7, type: 3}
-      propertyPath: timer
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3698332608906112910, guid: 60a5383418e77de418a274d0da6e30e7, type: 3}
-      propertyPath: cooldown
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3698332608906112910, guid: 60a5383418e77de418a274d0da6e30e7, type: 3}
-      propertyPath: firePoint
-      value: 
-      objectReference: {fileID: 1481507867024084347}
     - target: {fileID: 3976692843403402619, guid: 60a5383418e77de418a274d0da6e30e7, type: 3}
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 8887210594514678503, guid: 60a5383418e77de418a274d0da6e30e7, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 20daa800a641d9e4cae18a06630db1ef, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 60a5383418e77de418a274d0da6e30e7, type: 3}
---- !u!4 &1481507867024084347 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4617395206209494989, guid: 60a5383418e77de418a274d0da6e30e7, type: 3}
-  m_PrefabInstance: {fileID: 1481507867024084346}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1517813075447118209
 PrefabInstance:
   m_ObjectHideFlags: 0
