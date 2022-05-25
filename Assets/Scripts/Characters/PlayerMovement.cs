@@ -13,6 +13,7 @@ namespace Characters
         private PlayerInput _playerInput;
         private Rigidbody2D _body;
         private Animator _animator;
+        private RocketJump _rocketJump;
 
         private bool _isJumping = false;
 
@@ -27,8 +28,8 @@ namespace Characters
             _playerInput = GetComponentInParent<PlayerInput>();
             _playerInput.actions["Player/Jump"].performed += HandleJump;
 
-            RocketJump rj = new RocketJump(_animator, _body);
-            _playerInput.actions["Player/Rocket"].performed += rj.Trigger;
+            _rocketJump = new RocketJump(_animator, _body);
+            _playerInput.actions["Player/Rocket"].performed += _rocketJump.Trigger;
         }
 
         private void OnDestroy()
