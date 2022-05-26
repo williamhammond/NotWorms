@@ -19,10 +19,7 @@ namespace Characters
             _animator = GetComponentInParent<Animator>();
             _weapon = GetComponentInParent<Weapon>();
             _body = GetComponentInParent<Rigidbody2D>();
-        }
 
-        private void OnStart()
-        {
             _playerInput.actions["Player/Fire"].performed += HandleFire;
         }
 
