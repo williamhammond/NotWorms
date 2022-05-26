@@ -45,6 +45,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 5
+  terrainLayerMask:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!1 &1226746124160982966
 GameObject:
   m_ObjectHideFlags: 0

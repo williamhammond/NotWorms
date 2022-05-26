@@ -15,15 +15,15 @@ namespace Characters
 
         private void Awake()
         {
-            _playerInput.actions["Player/Fire"].performed += HandleFire;
-        }
-
-        private void OnEnable()
-        {
             _playerInput = GetComponentInParent<PlayerInput>();
             _animator = GetComponentInParent<Animator>();
             _weapon = GetComponentInParent<Weapon>();
             _body = GetComponentInParent<Rigidbody2D>();
+        }
+
+        private void OnStart()
+        {
+            _playerInput.actions["Player/Fire"].performed += HandleFire;
         }
 
         private void OnDestroy()
