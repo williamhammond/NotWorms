@@ -10,11 +10,16 @@ namespace Characters
         [SerializeField]
         private float speed = 5f;
 
+        [SerializeField]
+        private LayerMask terrainLayerMask;
+
         private PlayerInput _playerInput;
         private Rigidbody2D _body;
+        private Collider2D _collider;
         private Animator _animator;
 
         private bool _isJumping = false;
+        private Transform _groundChecker;
 
         private static readonly int IsRunningID = Animator.StringToHash("isRunning");
         private static readonly int IsJumpingID = Animator.StringToHash("isJumping");
@@ -23,6 +28,7 @@ namespace Characters
         {
             _animator = GetComponentInParent<Animator>();
             _body = GetComponentInParent<Rigidbody2D>();
+            _collider = GetComponentInParent<Collider2D>();
 
             _playerInput = GetComponentInParent<PlayerInput>();
             _playerInput.actions["Player/Jump"].performed += HandleJump;
@@ -36,11 +42,21 @@ namespace Characters
         private void FixedUpdate()
         {
             HandleMovement(_playerInput.actions["Player/Movement"].ReadValue<float>());
+            _isJumping = !Physics2D.BoxCast(
+                _collider.bounds.center,
+                _collider.bounds.size,
+                0f,
+                Vector2.down,
+                1f,
+                terrainLayerMask
+            );
+            _animator.SetBool(IsJumpingID, _isJumping);
         }
 
         private void OnDisable()
         {
-            _animator.SetBool(IsJumpingID, false);
+            _isJumping = false;
+            _animator.SetBool(IsJumpingID, _isJumping);
             _animator.SetBool(IsRunningID, false);
         }
 
@@ -56,6 +72,7 @@ namespace Characters
             {
                 _body.transform.localScale = new Vector3(-1, 1, 1);
             }
+
             _animator.SetBool(IsRunningID, Mathf.Abs(_body.velocity.x) > 0.1f);
         }
 
@@ -64,14 +81,9 @@ namespace Characters
             if (!_isJumping)
             {
                 _body.AddForce(Vector2.up * speed, ForceMode2D.Impulse);
-                _animator.SetBool(IsJumpingID, true);
                 _isJumping = true;
+                _animator.SetBool(IsJumpingID, _isJumping);
             }
-        }
-
-        private void OnCollisionEnter2D(Collision2D collision)
-        {
-            _animator.SetBool(IsJumpingID, false);
         }
     }
 }
