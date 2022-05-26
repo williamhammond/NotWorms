@@ -47,7 +47,7 @@ namespace Characters
                 _collider.bounds.size,
                 0f,
                 Vector2.down,
-                1f,
+                0.1f,
                 terrainLayerMask
             );
             _animator.SetBool(IsJumpingID, _isJumping);
