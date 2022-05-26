@@ -202,7 +202,7 @@ GameObject:
   - component: {fileID: -4097499778833093570}
   - component: {fileID: 7742707791534210319}
   - component: {fileID: 4630315369592866126}
-  - component: {fileID: 5856822934219219953}
+  - component: {fileID: 2275034826286883285}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -218,7 +218,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3976692843403402619}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.010731643, y: -2.7589865, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -301,7 +301,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!61 &2597257185044323647
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -446,7 +446,7 @@ MonoBehaviour:
   showGizmos: 0
   showOverlay: 0
   overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
---- !u!114 &5856822934219219953
+--- !u!114 &2275034826286883285
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -465,6 +465,6 @@ MonoBehaviour:
   syncVelocity: 1
   clearVelocity: 0
   velocitySensitivity: 0.1
-  syncAngularVelocity: 0
+  syncAngularVelocity: 1
   clearAngularVelocity: 0
   angularVelocitySensitivity: 0.1
