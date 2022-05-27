@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace DTerrain
@@ -50,6 +51,11 @@ namespace DTerrain
                 Range r = (Range)obj;
                 return (Min == r.Min) && (Max == r.Max);
             }
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Min, Max);
         }
 
         public static Range operator +(Range r, int a)

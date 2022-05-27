@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using UnityEngine;
 
 namespace DTerrain
@@ -13,8 +11,8 @@ namespace DTerrain
         [SerializeField]
         private Color startingColor;
 
-        private Texture2D texture;
-        public Texture2D Texture
+        private readonly Texture2D texture;
+        public new Texture2D Texture
         {
             get => texture;
             set
