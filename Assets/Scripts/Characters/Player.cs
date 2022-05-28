@@ -1,17 +1,24 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using Combat;
+using Mirror;
 
 namespace Characters
 {
     [RequireComponent(typeof(Rigidbody2D))]
-    public class Player : MonoBehaviour, IDamagable
+    public class Player : NetworkBehaviour, IDamagable
     {
-        public static event Action<Player> PlayerSpawned;
-        public static event Action<Player> PlayerDespawned;
+        public static event Action<Player> ServerOnPlayerSpawned;
+        public static event Action<Player> ServerOnPlayerDespawned;
+
+        public event Action<int, int> ClientOnHealthUpdated;
 
         [SerializeField]
-        private float health = 100f;
+        private int maxHealth = 100;
+
+        [SyncVar(hook = nameof(HandleHealthUpdated))]
+        private int _currentHealth;
 
         private PlayerMovement _playerMovement;
         private PlayerCombat _playerCombat;
@@ -20,32 +27,6 @@ namespace Characters
         private float _deathAnimationTime;
 
         private static readonly int DeathID = Animator.StringToHash("death");
-
-        private void Awake()
-        {
-            _animator = GetComponent<Animator>();
-            _playerCombat = GetComponentInChildren<PlayerCombat>();
-            _playerMovement = GetComponentInChildren<PlayerMovement>();
-
-            AnimationClip[] clips = _animator.runtimeAnimatorController.animationClips;
-            foreach (AnimationClip clip in clips)
-            {
-                if (DeathID == Animator.StringToHash(clip.name))
-                {
-                    _deathAnimationTime = clip.length;
-                }
-            }
-
-            PlayerEnergy.EnergyExhausted += HandleEnergyExhausted;
-            PlayerEnergy.EnergyReset += HandleEnergyReset;
-        }
-
-        private void OnDestroy()
-        {
-            PlayerDespawned?.Invoke(this);
-            PlayerEnergy.EnergyExhausted -= HandleEnergyExhausted;
-            PlayerEnergy.EnergyReset -= HandleEnergyReset;
-        }
 
         private void HandleEnergyExhausted()
         {
@@ -71,30 +52,75 @@ namespace Characters
             }
         }
 
-        private void Start()
+        public int GetHealth()
         {
-            PlayerSpawned?.Invoke(this);
-        }
-
-        public float GetHealth()
-        {
-            return health;
-        }
-
-        public void TakeDamage(float damage)
-        {
-            health -= damage;
-            Debug.Log($"Player health is {health}");
-            if (!IsAlive())
-            {
-                _animator.SetTrigger(DeathID);
-                Destroy(gameObject, _deathAnimationTime);
-            }
+            return _currentHealth;
         }
 
         public bool IsAlive()
         {
-            return health > 0;
+            return _currentHealth > 0;
         }
+
+        #region Server
+        public override void OnStartServer()
+        {
+            base.OnStartServer();
+
+            PlayerEnergy.EnergyExhausted += HandleEnergyExhausted;
+            PlayerEnergy.EnergyReset += HandleEnergyReset;
+
+            _animator = GetComponent<Animator>();
+            _playerCombat = GetComponentInChildren<PlayerCombat>();
+            _playerMovement = GetComponentInChildren<PlayerMovement>();
+            _currentHealth = maxHealth;
+
+            AnimationClip[] clips = _animator.runtimeAnimatorController.animationClips;
+            foreach (AnimationClip clip in clips)
+            {
+                if (DeathID == Animator.StringToHash(clip.name))
+                {
+                    _deathAnimationTime = clip.length;
+                }
+            }
+
+            ServerOnPlayerSpawned?.Invoke(this);
+        }
+
+        public override void OnStopServer()
+        {
+            base.OnStopServer();
+
+            PlayerEnergy.EnergyExhausted -= HandleEnergyExhausted;
+            PlayerEnergy.EnergyReset -= HandleEnergyReset;
+        }
+
+        [Server]
+        public void TakeDamage(int damage)
+        {
+            _currentHealth -= damage;
+            Debug.Log($"Player maxHealth is {maxHealth}");
+            if (!IsAlive())
+            {
+                StartCoroutine(DestroyWithAnimation());
+            }
+        }
+
+        IEnumerator DestroyWithAnimation()
+        {
+            _animator.SetTrigger(DeathID);
+            yield return new WaitForSeconds(_deathAnimationTime);
+            NetworkServer.Destroy(gameObject);
+            ServerOnPlayerDespawned?.Invoke(this);
+        }
+
+        #endregion
+
+        #region Client
+        private void HandleHealthUpdated(int oldHealth, int newHealth)
+        {
+            ClientOnHealthUpdated?.Invoke(newHealth, maxHealth);
+        }
+        #endregion
     }
 }

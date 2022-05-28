@@ -34,14 +34,14 @@ namespace Characters
 
             _playerInput.actions["Player/EndTurn"].performed += HandleNextTurn;
 
-            Player.PlayerSpawned += HandlePlayerSpawned;
-            Player.PlayerDespawned += HandlePlayerDespawned;
+            Player.ServerOnPlayerSpawned += HandleServerOnPlayerSpawned;
+            Player.ServerOnPlayerDespawned += HandleServerOnPlayerDespawned;
         }
 
         private void OnDestroy()
         {
-            Player.PlayerSpawned -= HandlePlayerSpawned;
-            Player.PlayerDespawned -= HandlePlayerDespawned;
+            Player.ServerOnPlayerSpawned -= HandleServerOnPlayerSpawned;
+            Player.ServerOnPlayerDespawned -= HandleServerOnPlayerDespawned;
         }
 
         private void HandleNextTurn(InputAction.CallbackContext context)
@@ -73,7 +73,7 @@ namespace Characters
             return turnOrder[currentTurn];
         }
 
-        private void HandlePlayerSpawned(Player player)
+        private void HandleServerOnPlayerSpawned(Player player)
         {
             if (turnOrder.Contains(player))
                 return;
@@ -81,7 +81,7 @@ namespace Characters
             turnOrder.Add(player);
         }
 
-        private void HandlePlayerDespawned(Player player)
+        private void HandleServerOnPlayerDespawned(Player player)
         {
             turnOrder.Remove(player);
         }

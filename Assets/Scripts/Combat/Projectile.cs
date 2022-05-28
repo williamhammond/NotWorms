@@ -13,7 +13,7 @@ namespace Combat
         private float maxLifetime;
 
         [SerializeField]
-        private float damage;
+        private int damage;
 
         private Animator _animator;
         private BoxCollider2D _boxCollider;
