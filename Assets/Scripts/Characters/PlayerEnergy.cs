@@ -27,6 +27,8 @@ namespace Characters
             _playerInput.actions["Player/ResetEnergy"].performed += ResetEnergy;
             _playerInput.actions["Player/Movement"].started += HandleMovementStart;
             _playerInput.actions["Player/Movement"].canceled += HandleMovementEnd;
+
+            AbstractAbility.AbilityTriggered += HandleEnergyUpdate;
         }
 
         private void OnDestroy()
