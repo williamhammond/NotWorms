@@ -8,20 +8,18 @@ namespace Characters
 {
     public class PlayerCombat : NetworkBehaviour
     {
-        public static event Action PlayerFired;
+        public static event Action<int> ServerPlayerFired;
 
         private PlayerInput _playerInput;
-        private Animator _animator;
         private NetworkAnimator _networkAnimator;
         private Weapon _weapon;
         private Rigidbody2D _body;
 
         private static readonly int AttackID = Animator.StringToHash("attack");
-        
+
         private void Awake()
         {
             _playerInput = GetComponent<PlayerInput>();
-            _animator = GetComponent<Animator>();
             _networkAnimator = GetComponent<NetworkAnimator>();
             _weapon = GetComponent<Weapon>();
             _body = GetComponent<Rigidbody2D>();
@@ -37,7 +35,7 @@ namespace Characters
             {
                 _networkAnimator.SetTrigger(AttackID);
                 _weapon.Fire();
-                PlayerFired?.Invoke();
+                ServerPlayerFired?.Invoke(connectionToClient.connectionId);
             }
         }
 
@@ -64,6 +62,5 @@ namespace Characters
             CmdFire();
         }
         #endregion
-
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using Mirror;
-using UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,26 +7,32 @@ namespace Characters
 {
     public class PlayerEnergy : NetworkBehaviour
     {
-        [SerializeField]
-        private float energy = 100f;
+        [SyncVar(hook = nameof(ClientHandleEnergyUpdate))]
+        private float _energy = 100f;
+
+        private bool _isMoving = false;
 
         public static event Action ServerEnergyExhausted;
         public static event Action EnergyReset;
 
-        private EnergyLabel _energyLabel;
-        private bool _isMoving = false;
+        public event Action<float> ClientOnEnergyUpdated;
+
         private PlayerInput _playerInput;
+
+        public float GetEnergy()
+        {
+            return _energy;
+        }
 
         private void Awake()
         {
-            _energyLabel = FindObjectOfType<EnergyLabel>();
             _playerInput = GetComponent<PlayerInput>();
         }
 
         #region Server
 
         [ServerCallback]
-        private void Update()
+        private void FixedUpdate()
         {
             if (_isMoving)
             {
@@ -37,52 +42,68 @@ namespace Characters
 
         public override void OnStartServer()
         {
-            PlayerCombat.PlayerFired += ServerHandleFire;
-            PlayerMovement.MovementStarted += ServerHandleMovementStart;
-            PlayerMovement.MovementEnded += ServerHandleMovementEnd;
+            PlayerCombat.ServerPlayerFired += ServerHandleFire;
+            PlayerMovement.ServerMovementStarted += ServerHandleMovementStart;
+            PlayerMovement.ServerMovementEnded += ServerHandleMovementEnd;
+            PlayerMovement.ServerPlayerJumped += ServerHandlePlayerJumped;
+        }
+
+        private void ServerHandlePlayerJumped(int connectionId)
+        {
+            if (connectionId == connectionToClient.connectionId)
+            {
+                ServerHandleEnergyUpdate(10);
+            }
         }
 
         public override void OnStopServer()
         {
-            PlayerCombat.PlayerFired -= ServerHandleFire;
-            PlayerMovement.MovementStarted -= ServerHandleMovementStart;
-            PlayerMovement.MovementEnded -= ServerHandleMovementEnd;
+            PlayerCombat.ServerPlayerFired -= ServerHandleFire;
+            PlayerMovement.ServerMovementStarted -= ServerHandleMovementStart;
+            PlayerMovement.ServerMovementEnded -= ServerHandleMovementEnd;
         }
 
-        private void ServerHandleMovementEnd()
+        private void ServerHandleMovementStart(int connectionId)
         {
-            _isMoving = false;
+            if (connectionId == connectionToClient.connectionId)
+            {
+                _isMoving = true;
+            }
         }
 
-        private void ServerHandleMovementStart()
+        private void ServerHandleMovementEnd(int connectionId)
         {
-            _isMoving = true;
+            if (connectionId == connectionToClient.connectionId)
+            {
+                _isMoving = false;
+            }
         }
 
         [Server]
         private void ServerHandleEnergyUpdate(float cost)
         {
-            bool energyPositive = energy > 0;
-            energy = Mathf.Max(0, energy - cost);
-            if (energyPositive && energy == 0)
+            bool energyPositive = _energy > 0;
+            _energy = Mathf.Max(0, _energy - cost);
+            if (energyPositive && _energy == 0)
             {
                 ServerEnergyExhausted?.Invoke();
             }
-            RpcHandleEnergyUpdate(energy);
         }
 
         [Command]
         private void CmdResetEnergy()
         {
             EnergyReset?.Invoke();
-            energy = 100f;
-            RpcHandleEnergyUpdate(energy);
+            _energy = 100f;
         }
 
         [Server]
-        private void ServerHandleFire()
+        private void ServerHandleFire(int connectionId)
         {
-            ServerHandleEnergyUpdate(10);
+            if (connectionId == connectionToClient.connectionId)
+            {
+                ServerHandleEnergyUpdate(10);
+            }
         }
 
         #endregion
@@ -105,10 +126,9 @@ namespace Characters
             CmdResetEnergy();
         }
 
-        [ClientRpc]
-        private void RpcHandleEnergyUpdate(float newEnergy)
+        private void ClientHandleEnergyUpdate(float oldEnergy, float newEnergy)
         {
-            _energyLabel.SetEnergy(newEnergy);
+            ClientOnEnergyUpdated?.Invoke(newEnergy);
         }
 
         #endregion

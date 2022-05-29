@@ -1,4 +1,6 @@
 using System;
+using Characters;
+using Mirror;
 using TMPro;
 using UnityEngine;
 
@@ -8,14 +10,30 @@ namespace UI
     {
         private TextMeshProUGUI labelText;
 
+        private PlayerEnergy _playerEnergy;
+
         private void Awake()
         {
             labelText = GetComponent<TextMeshProUGUI>();
         }
 
-        public void SetEnergy(float input)
+        public void Update()
         {
-            labelText.text = $"Energy: {Math.Round(input)}";
+            // TODO: Hack until we have a lobby
+            if (_playerEnergy == null)
+            {
+                _playerEnergy = NetworkClient.connection.identity.GetComponent<PlayerEnergy>();
+                if (_playerEnergy != null)
+                {
+                    ClientHandleEnergyUpdated(_playerEnergy.GetEnergy());
+                    _playerEnergy.ClientOnEnergyUpdated += ClientHandleEnergyUpdated;
+                }
+            }
+        }
+
+        private void ClientHandleEnergyUpdated(float energy)
+        {
+            labelText.text = $"Energy: {energy}";
         }
     }
 }

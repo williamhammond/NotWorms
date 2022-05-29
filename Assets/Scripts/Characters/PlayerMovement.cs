@@ -14,8 +14,9 @@ namespace Characters
         [SerializeField]
         private LayerMask terrainLayerMask;
 
-        public static event Action MovementStarted;
-        public static event Action MovementEnded;
+        public static event Action<int> ServerMovementStarted;
+        public static event Action<int> ServerMovementEnded;
+        public static event Action<int> ServerPlayerJumped;
 
         private PlayerInput _playerInput;
         private Rigidbody2D _body;
@@ -37,36 +38,47 @@ namespace Characters
             _playerInput = GetComponent<PlayerInput>();
         }
 
+        private void Update()
+        {
+            if (!isLocalPlayer)
+            {
+                return;
+            }
+            float movement = _playerInput.actions["Player/Movement"].ReadValue<float>();
+            if (_isMoving != (Mathf.Abs(movement) > 0.01f))
+            {
+                if (Mathf.Abs(movement) > 0.01f)
+                {
+                    _isMoving = true;
+                    CmdMovementStarted();
+                }
+                else
+                {
+                    _isMoving = false;
+                    CmdMovementEnded();
+                }
+            }
+        }
+
         private void FixedUpdate()
         {
-            if (hasAuthority)
+            if (!isLocalPlayer)
             {
-                float movement = _playerInput.actions["Player/Movement"].ReadValue<float>();
-                if (_isMoving != (Mathf.Abs(movement) > 0.01f))
-                {
-                    if (movement > 0.01f)
-                    {
-                        _isMoving = true;
-                        MovementStarted?.Invoke();
-                    }
-                    else
-                    {
-                        _isMoving = false;
-                        MovementEnded?.Invoke();
-                    }
-                }
-                ClientHandleMove(movement);
-
-                _isJumping = !Physics2D.BoxCast(
-                    _collider.bounds.center,
-                    _collider.bounds.size,
-                    0f,
-                    Vector2.down,
-                    0.1f,
-                    terrainLayerMask
-                );
-                _animator.SetBool(IsJumpingID, _isJumping);
+                return;
             }
+
+            float movement = _playerInput.actions["Player/Movement"].ReadValue<float>();
+            ClientHandleMove(movement);
+
+            _isJumping = !Physics2D.BoxCast(
+                _collider.bounds.center,
+                _collider.bounds.size,
+                0f,
+                Vector2.down,
+                0.1f,
+                terrainLayerMask
+            );
+            _animator.SetBool(IsJumpingID, _isJumping);
         }
 
         #region Server
@@ -82,13 +94,19 @@ namespace Characters
         [Command]
         private void CmdMovementStarted()
         {
-            MovementStarted?.Invoke();
+            ServerMovementStarted?.Invoke(connectionToClient.connectionId);
         }
 
         [Command]
         private void CmdMovementEnded()
         {
-            MovementEnded?.Invoke();
+            ServerMovementEnded?.Invoke(connectionToClient.connectionId);
+        }
+
+        [Command]
+        private void CmdJump()
+        {
+            ServerPlayerJumped?.Invoke(connectionToClient.connectionId);
         }
 
         #endregion
@@ -132,6 +150,7 @@ namespace Characters
                 _body.AddForce(Vector2.up * speed, ForceMode2D.Impulse);
                 _isJumping = true;
                 _animator.SetBool(IsJumpingID, _isJumping);
+                CmdJump();
             }
         }
 
