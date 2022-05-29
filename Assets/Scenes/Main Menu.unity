@@ -1402,6 +1402,10 @@ PrefabInstance:
       propertyPath: playerSpawnMethod
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1034824813317227411, guid: a4be0443cd263f741bda10ccaa9c5dd0, type: 3}
+      propertyPath: spawnPrefabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1034824813317227412, guid: a4be0443cd263f741bda10ccaa9c5dd0, type: 3}
       propertyPath: m_RootOrder
       value: 4
