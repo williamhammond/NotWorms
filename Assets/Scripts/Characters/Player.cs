@@ -61,15 +61,9 @@ namespace Characters
         {
             return _currentHealth > 0;
         }
-
-        #region Server
-        public override void OnStartServer()
+        
+        private void Awake()
         {
-            base.OnStartServer();
-
-            PlayerEnergy.EnergyExhausted += HandleEnergyExhausted;
-            PlayerEnergy.EnergyReset += HandleEnergyReset;
-
             _animator = GetComponent<Animator>();
             _playerCombat = GetComponentInChildren<PlayerCombat>();
             _playerMovement = GetComponentInChildren<PlayerMovement>();
@@ -83,6 +77,16 @@ namespace Characters
                     _deathAnimationTime = clip.length;
                 }
             }
+        }
+        
+
+        #region Server
+        public override void OnStartServer()
+        {
+            base.OnStartServer();
+
+            PlayerEnergy.EnergyExhausted += HandleEnergyExhausted;
+            PlayerEnergy.EnergyReset += HandleEnergyReset;
 
             ServerOnPlayerSpawned?.Invoke(this);
         }

@@ -1,15 +1,16 @@
 ﻿using System;
+using Mirror;
 using UnityEngine;
 
 namespace Combat
 {
-    public class Weapon : MonoBehaviour
+    public class Weapon : NetworkBehaviour
     {
         [SerializeField]
         private Transform firePoint;
 
         [SerializeField]
-        private Transform projectile;
+        private GameObject projectile;
 
         [SerializeField]
         private float timer;
@@ -17,11 +18,14 @@ namespace Combat
         [SerializeField]
         private float cooldown;
 
-        private void Awake()
+        #region Server
+
+        public override void OnStartServer()
         {
             timer = Mathf.Infinity;
         }
 
+        [ServerCallback]
         private void Update()
         {
             timer += Time.deltaTime;
@@ -32,14 +36,18 @@ namespace Combat
             return timer < cooldown;
         }
 
+        [Server]
         public void Fire()
         {
             if (!OnCooldown())
             {
                 timer = 0;
-                Transform clone = Instantiate(projectile, firePoint.position, firePoint.rotation);
+                GameObject clone = Instantiate(projectile, firePoint.position, firePoint.rotation);
                 clone.GetComponent<Combat.Projectile>().Setup(Mathf.Sign(transform.localScale.x));
+                NetworkServer.Spawn(clone, connectionToClient);
             }
         }
+
+        #endregion
     }
 }

@@ -1,10 +1,11 @@
 ﻿using Combat;
+using Mirror;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Characters
 {
-    public class PlayerCombat : MonoBehaviour
+    public class PlayerCombat : NetworkBehaviour
     {
         private PlayerInput _playerInput;
         private Animator _animator;
@@ -15,20 +16,17 @@ namespace Characters
 
         private void Awake()
         {
-            _playerInput = GetComponentInParent<PlayerInput>();
-            _animator = GetComponentInParent<Animator>();
-            _weapon = GetComponentInParent<Weapon>();
-            _body = GetComponentInParent<Rigidbody2D>();
-
-            _playerInput.actions["Player/Fire"].performed += HandleFire;
+            _playerInput = GetComponent<PlayerInput>();
+            _animator = GetComponent<Animator>();
+            _weapon = GetComponent<Weapon>();
+            _body = GetComponent<Rigidbody2D>();
         }
 
-        private void OnDestroy()
-        {
-            _playerInput.actions["Player/Fire"].performed -= HandleFire;
-        }
+        #region Server
 
-        private void HandleFire(InputAction.CallbackContext context)
+
+        [Command]
+        private void CmdFire()
         {
             if (CanAttack())
             {
@@ -41,5 +39,25 @@ namespace Characters
         {
             return _body.velocity.x < 0.01f && _body.velocity.y < 0.01f && !_weapon.OnCooldown();
         }
+        #endregion
+
+        #region Client
+
+        public override void OnStartAuthority()
+        {
+            _playerInput.actions["Player/Fire"].performed += AuthorityHandleFire;
+        }
+
+        public override void OnStopClient()
+        {
+            _playerInput.actions["Player/Fire"].performed -= AuthorityHandleFire;
+        }
+
+        private void AuthorityHandleFire(InputAction.CallbackContext context)
+        {
+            CmdFire();
+        }
+        #endregion
+
     }
 }
