@@ -24,6 +24,7 @@ namespace Characters
         private PlayerCombat _playerCombat;
 
         private Animator _animator;
+        private NetworkAnimator _networkAnimator;
         private float _deathAnimationTime;
 
         private static readonly int DeathID = Animator.StringToHash("death");
@@ -61,10 +62,11 @@ namespace Characters
         {
             return _currentHealth > 0;
         }
-        
+
         private void Awake()
         {
             _animator = GetComponent<Animator>();
+            _networkAnimator = GetComponent<NetworkAnimator>();
             _playerCombat = GetComponentInChildren<PlayerCombat>();
             _playerMovement = GetComponentInChildren<PlayerMovement>();
             _currentHealth = maxHealth;
@@ -78,7 +80,6 @@ namespace Characters
                 }
             }
         }
-        
 
         #region Server
         public override void OnStartServer()
@@ -106,13 +107,13 @@ namespace Characters
             Debug.Log($"Player maxHealth is {maxHealth}");
             if (!IsAlive())
             {
-                StartCoroutine(DestroyWithAnimation());
+                RpcOnDeath();
             }
         }
 
         IEnumerator DestroyWithAnimation()
         {
-            _animator.SetTrigger(DeathID);
+            _networkAnimator.SetTrigger(DeathID);
             yield return new WaitForSeconds(_deathAnimationTime);
             NetworkServer.Destroy(gameObject);
             ServerOnPlayerDespawned?.Invoke(this);
@@ -121,6 +122,12 @@ namespace Characters
         #endregion
 
         #region Client
+        [ClientRpc]
+        private void RpcOnDeath()
+        {
+            StartCoroutine(DestroyWithAnimation());
+        }
+
         private void HandleHealthUpdated(int oldHealth, int newHealth)
         {
             ClientOnHealthUpdated?.Invoke(newHealth, maxHealth);

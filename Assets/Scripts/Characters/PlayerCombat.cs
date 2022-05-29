@@ -9,6 +9,7 @@ namespace Characters
     {
         private PlayerInput _playerInput;
         private Animator _animator;
+        private NetworkAnimator _networkAnimator;
         private Weapon _weapon;
         private Rigidbody2D _body;
 
@@ -18,6 +19,7 @@ namespace Characters
         {
             _playerInput = GetComponent<PlayerInput>();
             _animator = GetComponent<Animator>();
+            _networkAnimator = GetComponent<NetworkAnimator>();
             _weapon = GetComponent<Weapon>();
             _body = GetComponent<Rigidbody2D>();
         }
@@ -30,7 +32,7 @@ namespace Characters
         {
             if (CanAttack())
             {
-                _animator.SetTrigger(AttackID);
+                _networkAnimator.SetTrigger(AttackID);
                 _weapon.Fire();
             }
         }
