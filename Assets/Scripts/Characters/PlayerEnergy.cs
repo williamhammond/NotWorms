@@ -1,81 +1,117 @@
 ﻿using System;
+using Mirror;
 using UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Characters
 {
-    public class PlayerEnergy : MonoBehaviour
+    public class PlayerEnergy : NetworkBehaviour
     {
         [SerializeField]
         private float energy = 100f;
 
-        public static event Action EnergyExhausted;
+        public static event Action ServerEnergyExhausted;
         public static event Action EnergyReset;
 
         private EnergyLabel _energyLabel;
-        private PlayerInput _playerInput;
         private bool _isMoving = false;
+        private PlayerInput _playerInput;
 
         private void Awake()
         {
             _energyLabel = FindObjectOfType<EnergyLabel>();
-
-            _playerInput = GetComponentInParent<PlayerInput>();
-
-            _playerInput.actions["Player/Fire"].performed += HandleFire;
-            _playerInput.actions["Player/ResetEnergy"].performed += ResetEnergy;
-            _playerInput.actions["Player/Movement"].started += HandleMovementStart;
-            _playerInput.actions["Player/Movement"].canceled += HandleMovementEnd;
+            _playerInput = GetComponent<PlayerInput>();
         }
 
-        private void OnDestroy()
-        {
-            _playerInput.actions["Player/Fire"].performed -= HandleFire;
-            _playerInput.actions["Player/ResetEnergy"].performed -= ResetEnergy;
-            _playerInput.actions["Player/Movement"].started -= HandleMovementStart;
-            _playerInput.actions["Player/Movement"].canceled -= HandleMovementEnd;
-        }
+        #region Server
 
+        [ServerCallback]
         private void Update()
         {
             if (_isMoving)
             {
-                HandleEnergyUpdate(0.1f);
+                ServerHandleEnergyUpdate(0.1f);
             }
         }
 
-        private void HandleMovementEnd(InputAction.CallbackContext context)
+        public override void OnStartServer()
+        {
+            PlayerCombat.PlayerFired += ServerHandleFire;
+            PlayerMovement.MovementStarted += ServerHandleMovementStart;
+            PlayerMovement.MovementEnded += ServerHandleMovementEnd;
+        }
+
+        public override void OnStopServer()
+        {
+            PlayerCombat.PlayerFired -= ServerHandleFire;
+            PlayerMovement.MovementStarted -= ServerHandleMovementStart;
+            PlayerMovement.MovementEnded -= ServerHandleMovementEnd;
+        }
+
+        private void ServerHandleMovementEnd()
         {
             _isMoving = false;
         }
 
-        private void HandleMovementStart(InputAction.CallbackContext context)
+        private void ServerHandleMovementStart()
         {
             _isMoving = true;
         }
 
-        private void ResetEnergy(InputAction.CallbackContext context)
-        {
-            EnergyReset?.Invoke();
-            energy = 100f;
-            _energyLabel.SetEnergy(energy);
-        }
-
-        private void HandleFire(InputAction.CallbackContext context)
-        {
-            HandleEnergyUpdate(10);
-        }
-
-        private void HandleEnergyUpdate(float cost)
+        [Server]
+        private void ServerHandleEnergyUpdate(float cost)
         {
             bool energyPositive = energy > 0;
             energy = Mathf.Max(0, energy - cost);
             if (energyPositive && energy == 0)
             {
-                EnergyExhausted?.Invoke();
+                ServerEnergyExhausted?.Invoke();
             }
-            _energyLabel.SetEnergy(energy);
+            RpcHandleEnergyUpdate(energy);
         }
+
+        [Command]
+        private void CmdResetEnergy()
+        {
+            EnergyReset?.Invoke();
+            energy = 100f;
+            RpcHandleEnergyUpdate(energy);
+        }
+
+        [Server]
+        private void ServerHandleFire()
+        {
+            ServerHandleEnergyUpdate(10);
+        }
+
+        #endregion
+
+        #region Client
+
+        public override void OnStartAuthority()
+        {
+            _playerInput.actions["Player/ResetEnergy"].performed += ClientResetEnergy;
+        }
+
+        public override void OnStopClient()
+        {
+            _playerInput.actions["Player/ResetEnergy"].performed -= ClientResetEnergy;
+        }
+
+        [Client]
+        private void ClientResetEnergy(InputAction.CallbackContext obj)
+        {
+            CmdResetEnergy();
+        }
+
+        [ClientRpc]
+        private void RpcHandleEnergyUpdate(float newEnergy)
+        {
+            _energyLabel.SetEnergy(newEnergy);
+        }
+
+        #endregion
+
     }
 }

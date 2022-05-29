@@ -1,4 +1,5 @@
-﻿using Combat;
+﻿using System;
+using Combat;
 using Mirror;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -7,6 +8,8 @@ namespace Characters
 {
     public class PlayerCombat : NetworkBehaviour
     {
+        public static event Action PlayerFired;
+
         private PlayerInput _playerInput;
         private Animator _animator;
         private NetworkAnimator _networkAnimator;
@@ -14,7 +17,7 @@ namespace Characters
         private Rigidbody2D _body;
 
         private static readonly int AttackID = Animator.StringToHash("attack");
-
+        
         private void Awake()
         {
             _playerInput = GetComponent<PlayerInput>();
@@ -34,6 +37,7 @@ namespace Characters
             {
                 _networkAnimator.SetTrigger(AttackID);
                 _weapon.Fire();
+                PlayerFired?.Invoke();
             }
         }
 

@@ -14,12 +14,16 @@ namespace Characters
         [SerializeField]
         private LayerMask terrainLayerMask;
 
+        public static event Action MovementStarted;
+        public static event Action MovementEnded;
+
         private PlayerInput _playerInput;
         private Rigidbody2D _body;
         private Collider2D _collider;
         private Animator _animator;
 
         private bool _isJumping = false;
+        private bool _isMoving = false;
         private Transform _groundChecker;
 
         private static readonly int IsRunningID = Animator.StringToHash("isRunning");
@@ -37,7 +41,22 @@ namespace Characters
         {
             if (hasAuthority)
             {
-                ClientHandleMove(_playerInput.actions["Player/Movement"].ReadValue<float>());
+                float movement = _playerInput.actions["Player/Movement"].ReadValue<float>();
+                if (_isMoving != (Mathf.Abs(movement) > 0.01f))
+                {
+                    if (movement > 0.01f)
+                    {
+                        _isMoving = true;
+                        MovementStarted?.Invoke();
+                    }
+                    else
+                    {
+                        _isMoving = false;
+                        MovementEnded?.Invoke();
+                    }
+                }
+                ClientHandleMove(movement);
+
                 _isJumping = !Physics2D.BoxCast(
                     _collider.bounds.center,
                     _collider.bounds.size,
@@ -51,12 +70,25 @@ namespace Characters
         }
 
         #region Server
+
         [Server]
         public override void OnStopServer()
         {
             _isJumping = false;
             _animator.SetBool(IsJumpingID, _isJumping);
             _animator.SetBool(IsRunningID, false);
+        }
+
+        [Command]
+        private void CmdMovementStarted()
+        {
+            MovementStarted?.Invoke();
+        }
+
+        [Command]
+        private void CmdMovementEnded()
+        {
+            MovementEnded?.Invoke();
         }
 
         #endregion
@@ -74,6 +106,7 @@ namespace Characters
             {
                 return;
             }
+
             _playerInput.actions["Player/Jump"].performed -= ClientHandleJump;
         }
 

@@ -20,37 +20,36 @@ namespace Characters
         [SyncVar(hook = nameof(HandleHealthUpdated))]
         private int _currentHealth;
 
-        private PlayerMovement _playerMovement;
-        private PlayerCombat _playerCombat;
-
         private Animator _animator;
         private NetworkAnimator _networkAnimator;
         private float _deathAnimationTime;
 
         private static readonly int DeathID = Animator.StringToHash("death");
 
-        private void HandleEnergyExhausted()
+        private void ServerHandleEnergyExhausted()
         {
-            if (_playerMovement)
-            {
-                _playerMovement.gameObject.SetActive(false);
-            }
-            if (_playerCombat)
-            {
-                _playerCombat.gameObject.SetActive(false);
-            }
+            Debug.Log("Energy exhausted!");
+            // if (_playerMovement)
+            // {
+            //     _playerMovement.gameObject.SetActive(false);
+            // }
+            // if (_playerCombat)
+            // {
+            //     _playerCombat.gameObject.SetActive(false);
+            // }
         }
 
         private void HandleEnergyReset()
         {
-            if (_playerMovement)
-            {
-                _playerMovement.gameObject.SetActive(true);
-            }
-            if (_playerCombat)
-            {
-                _playerCombat.gameObject.SetActive(true);
-            }
+            Debug.Log("Energy reset!");
+            // if (_playerMovement)
+            // {
+            //     _playerMovement.gameObject.SetActive(true);
+            // }
+            // if (_playerCombat)
+            // {
+            //     _playerCombat.gameObject.SetActive(true);
+            // }
         }
 
         public int GetHealth()
@@ -67,8 +66,6 @@ namespace Characters
         {
             _animator = GetComponent<Animator>();
             _networkAnimator = GetComponent<NetworkAnimator>();
-            _playerCombat = GetComponentInChildren<PlayerCombat>();
-            _playerMovement = GetComponentInChildren<PlayerMovement>();
             _currentHealth = maxHealth;
 
             AnimationClip[] clips = _animator.runtimeAnimatorController.animationClips;
@@ -86,7 +83,7 @@ namespace Characters
         {
             base.OnStartServer();
 
-            PlayerEnergy.EnergyExhausted += HandleEnergyExhausted;
+            PlayerEnergy.ServerEnergyExhausted += ServerHandleEnergyExhausted;
             PlayerEnergy.EnergyReset += HandleEnergyReset;
 
             ServerOnPlayerSpawned?.Invoke(this);
@@ -96,7 +93,7 @@ namespace Characters
         {
             base.OnStopServer();
 
-            PlayerEnergy.EnergyExhausted -= HandleEnergyExhausted;
+            PlayerEnergy.ServerEnergyExhausted -= ServerHandleEnergyExhausted;
             PlayerEnergy.EnergyReset -= HandleEnergyReset;
         }
 
@@ -122,6 +119,7 @@ namespace Characters
         #endregion
 
         #region Client
+
         [ClientRpc]
         private void RpcOnDeath()
         {
