@@ -138,6 +138,10 @@ namespace Characters
 
         private void ClientHandleMove(float movement)
         {
+            if (!enabled)
+            {
+                return;
+            }
             _body.velocity = new Vector2(movement * speed, _body.velocity.y);
             Vector2 moveDirection = _body.velocity;
 
@@ -153,6 +157,10 @@ namespace Characters
 
         private void ClientHandleJump(InputAction.CallbackContext obj)
         {
+            if (!enabled)
+            {
+                return;
+            }
             if (!_isJumping)
             {
                 _body.AddForce(Vector2.up * speed, ForceMode2D.Impulse);
