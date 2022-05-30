@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using Mirror;
 using UI;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using Utils;
 
 namespace Characters

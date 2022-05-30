@@ -32,9 +32,9 @@ namespace Characters
         {
             if (CanAttack())
             {
-                _networkAnimator.SetTrigger(AttackID);
                 _weapon.Fire();
                 ServerPlayerFired?.Invoke(connectionToClient.connectionId);
+                RpcFireAnimation();
             }
         }
 
@@ -49,6 +49,12 @@ namespace Characters
         #endregion
 
         #region Client
+
+        [ClientRpc]
+        private void RpcFireAnimation()
+        {
+            _networkAnimator.SetTrigger(AttackID);
+        }
 
         public override void OnStartAuthority()
         {
