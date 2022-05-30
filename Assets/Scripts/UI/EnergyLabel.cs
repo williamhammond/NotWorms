@@ -1,4 +1,3 @@
-using System;
 using Characters;
 using Mirror;
 using TMPro;

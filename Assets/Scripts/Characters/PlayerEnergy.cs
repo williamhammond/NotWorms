@@ -12,8 +12,8 @@ namespace Characters
 
         private bool _isMoving = false;
 
-        public static event Action ServerEnergyExhausted;
-        public static event Action EnergyReset;
+        public static event Action<int> ServerEnergyExhausted;
+        public static event Action<int> ServerEnergyReset;
 
         public event Action<float> ClientOnEnergyUpdated;
 
@@ -86,14 +86,14 @@ namespace Characters
             _energy = Mathf.Max(0, _energy - cost);
             if (energyPositive && _energy == 0)
             {
-                ServerEnergyExhausted?.Invoke();
+                ServerEnergyExhausted?.Invoke(connectionToClient.connectionId);
             }
         }
 
         [Command]
         private void CmdResetEnergy()
         {
-            EnergyReset?.Invoke();
+            ServerEnergyReset?.Invoke(connectionToClient.connectionId);
             _energy = 100f;
         }
 

@@ -21,51 +21,19 @@ namespace Characters
         private int _currentHealth;
 
         private Animator _animator;
+        private PlayerMovement _playerMovement;
+        private PlayerCombat _playerCombat;
         private NetworkAnimator _networkAnimator;
         private float _deathAnimationTime;
 
         private static readonly int DeathID = Animator.StringToHash("death");
 
-        private void ServerHandleEnergyExhausted()
-        {
-            Debug.Log("Energy exhausted!");
-            // if (_playerMovement)
-            // {
-            //     _playerMovement.gameObject.SetActive(false);
-            // }
-            // if (_playerCombat)
-            // {
-            //     _playerCombat.gameObject.SetActive(false);
-            // }
-        }
-
-        private void HandleEnergyReset()
-        {
-            Debug.Log("Energy reset!");
-            // if (_playerMovement)
-            // {
-            //     _playerMovement.gameObject.SetActive(true);
-            // }
-            // if (_playerCombat)
-            // {
-            //     _playerCombat.gameObject.SetActive(true);
-            // }
-        }
-
-        public int GetHealth()
-        {
-            return _currentHealth;
-        }
-
-        public bool IsAlive()
-        {
-            return _currentHealth > 0;
-        }
-
         private void Awake()
         {
             _animator = GetComponent<Animator>();
             _networkAnimator = GetComponent<NetworkAnimator>();
+            _playerMovement = GetComponent<PlayerMovement>();
+            _playerCombat = GetComponent<PlayerCombat>();
             _currentHealth = maxHealth;
 
             AnimationClip[] clips = _animator.runtimeAnimatorController.animationClips;
@@ -78,23 +46,51 @@ namespace Characters
             }
         }
 
+        public int GetHealth()
+        {
+            return _currentHealth;
+        }
+
+        public bool IsAlive()
+        {
+            return _currentHealth > 0;
+        }
+
         #region Server
+
         public override void OnStartServer()
         {
-            base.OnStartServer();
-
             PlayerEnergy.ServerEnergyExhausted += ServerHandleEnergyExhausted;
-            PlayerEnergy.EnergyReset += HandleEnergyReset;
+            PlayerEnergy.ServerEnergyReset += ServerHandleEnergyReset;
 
             ServerOnPlayerSpawned?.Invoke(this);
         }
 
         public override void OnStopServer()
         {
-            base.OnStopServer();
-
             PlayerEnergy.ServerEnergyExhausted -= ServerHandleEnergyExhausted;
-            PlayerEnergy.EnergyReset -= HandleEnergyReset;
+            PlayerEnergy.ServerEnergyReset -= ServerHandleEnergyReset;
+
+            ServerOnPlayerDespawned?.Invoke(this);
+        }
+
+        private void ServerHandleEnergyExhausted(int connectionId)
+        {
+            if (connectionToClient.connectionId != connectionId)
+            {
+                return;
+            }
+
+            RpcHandleEnergyExhaustion();
+        }
+
+        private void ServerHandleEnergyReset(int connectionId)
+        {
+            if (connectionToClient.connectionId != connectionId)
+            {
+                return;
+            }
+            RpcHandleEnergyReset();
         }
 
         [Server]
@@ -126,10 +122,39 @@ namespace Characters
             StartCoroutine(DestroyWithAnimation());
         }
 
+        [ClientRpc]
+        private void RpcHandleEnergyExhaustion()
+        {
+            if (_playerMovement)
+            {
+                _playerMovement.enabled = false;
+            }
+
+            if (_playerCombat)
+            {
+                _playerCombat.enabled = false;
+            }
+        }
+
+        [ClientRpc]
+        private void RpcHandleEnergyReset()
+        {
+            if (_playerMovement)
+            {
+                _playerMovement.enabled = true;
+            }
+
+            if (_playerCombat)
+            {
+                _playerCombat.enabled = true;
+            }
+        }
+
         private void HandleHealthUpdated(int oldHealth, int newHealth)
         {
             ClientOnHealthUpdated?.Invoke(newHealth, maxHealth);
         }
+
         #endregion
     }
 }

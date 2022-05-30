@@ -38,12 +38,20 @@ namespace Characters
             _playerInput = GetComponent<PlayerInput>();
         }
 
+        private void OnDisable()
+        {
+            _isJumping = false;
+            _animator.SetBool(IsJumpingID, _isJumping);
+            _animator.SetBool(IsRunningID, false);
+        }
+
         private void Update()
         {
             if (!isLocalPlayer)
             {
                 return;
             }
+
             float movement = _playerInput.actions["Player/Movement"].ReadValue<float>();
             if (_isMoving != (Mathf.Abs(movement) > 0.01f))
             {
