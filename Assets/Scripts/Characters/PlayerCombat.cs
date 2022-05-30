@@ -27,7 +27,6 @@ namespace Characters
 
         #region Server
 
-
         [Command]
         private void CmdFire()
         {
@@ -41,8 +40,12 @@ namespace Characters
 
         private bool CanAttack()
         {
-            return _body.velocity.x < 0.01f && _body.velocity.y < 0.01f && !_weapon.OnCooldown();
+            return enabled
+                && _body.velocity.x < 0.01f
+                && _body.velocity.y < 0.01f
+                && !_weapon.OnCooldown();
         }
+
         #endregion
 
         #region Client
@@ -61,6 +64,7 @@ namespace Characters
         {
             CmdFire();
         }
+
         #endregion
     }
 }
