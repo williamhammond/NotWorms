@@ -32,7 +32,7 @@ namespace UI
 
         private void ClientHandleEnergyUpdated(float energy)
         {
-            labelText.text = $"Energy: {energy}";
+            labelText.text = $"Energy: {energy:0.00}";
         }
     }
 }
