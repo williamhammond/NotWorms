@@ -1,20 +1,18 @@
-using Characters;
+using Mirror;
 using TMPro;
-using UnityEngine;
 
 namespace UI
 {
-    public class CurrentTurnText : MonoBehaviour
+    public class CurrentTurnText : NetworkBehaviour
     {
         private TextMeshProUGUI labelText;
 
         private void Awake()
         {
             labelText = GetComponent<TextMeshProUGUI>();
-            TurnController.TurnChanged += HandleTurnChanged;
         }
 
-        private void HandleTurnChanged(int turn)
+        public void SetTurn(int turn)
         {
             labelText.text = $"Turn: {turn}";
         }

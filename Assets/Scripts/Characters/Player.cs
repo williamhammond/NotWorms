@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using Combat;
 using Mirror;
+using UnityEngine.InputSystem;
 
 namespace Characters
 {
@@ -11,6 +12,8 @@ namespace Characters
     {
         public static event Action<Player> ServerOnPlayerSpawned;
         public static event Action<Player> ServerOnPlayerDespawned;
+
+        public static event Action ServerPlayerEndedTurn;
 
         public event Action<int, int> ClientOnHealthUpdated;
 
@@ -23,6 +26,7 @@ namespace Characters
         private Animator _animator;
         private PlayerMovement _playerMovement;
         private PlayerCombat _playerCombat;
+        private PlayerInput _playerInput;
         private NetworkAnimator _networkAnimator;
         private float _deathAnimationTime;
 
@@ -34,6 +38,7 @@ namespace Characters
             _networkAnimator = GetComponent<NetworkAnimator>();
             _playerMovement = GetComponent<PlayerMovement>();
             _playerCombat = GetComponent<PlayerCombat>();
+            _playerInput = GetComponent<PlayerInput>();
             _currentHealth = maxHealth;
 
             AnimationClip[] clips = _animator.runtimeAnimatorController.animationClips;
@@ -112,9 +117,30 @@ namespace Characters
             ServerOnPlayerDespawned?.Invoke(this);
         }
 
+        [Command]
+        private void CmdEndTurn()
+        {
+            ServerPlayerEndedTurn?.Invoke();
+        }
+
         #endregion
 
         #region Client
+
+        public override void OnStartAuthority()
+        {
+            _playerInput.actions["Player/EndTurn"].performed += ClientHandleNextTurn;
+        }
+
+        public override void OnStopClient()
+        {
+            _playerInput.actions["Player/EndTurn"].performed -= ClientHandleNextTurn;
+        }
+
+        private void ClientHandleNextTurn(InputAction.CallbackContext obj)
+        {
+            CmdEndTurn();
+        }
 
         [ClientRpc]
         private void RpcOnDeath()

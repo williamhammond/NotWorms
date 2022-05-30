@@ -207,63 +207,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &488431569
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 226874519684553302, guid: 5637aef04d7c2604f9531df112388662, type: 3}
-      propertyPath: m_RootOrder
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 226874519684553302, guid: 5637aef04d7c2604f9531df112388662, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 226874519684553302, guid: 5637aef04d7c2604f9531df112388662, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 226874519684553302, guid: 5637aef04d7c2604f9531df112388662, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 226874519684553302, guid: 5637aef04d7c2604f9531df112388662, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 226874519684553302, guid: 5637aef04d7c2604f9531df112388662, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 226874519684553302, guid: 5637aef04d7c2604f9531df112388662, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 226874519684553302, guid: 5637aef04d7c2604f9531df112388662, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 226874519684553302, guid: 5637aef04d7c2604f9531df112388662, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 226874519684553302, guid: 5637aef04d7c2604f9531df112388662, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 226874519684553302, guid: 5637aef04d7c2604f9531df112388662, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 226874519684553305, guid: 5637aef04d7c2604f9531df112388662, type: 3}
-      propertyPath: m_Name
-      value: TurnController
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 5637aef04d7c2604f9531df112388662, type: 3}
 --- !u!1001 &501150078
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -348,6 +291,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1519158349051883437, guid: 0e9d1e2bc1c06d044866c14c4fc592c2, type: 3}
+      propertyPath: sceneId
+      value: 759096442
+      objectReference: {fileID: 0}
     - target: {fileID: 2142779800346785253, guid: 0e9d1e2bc1c06d044866c14c4fc592c2, type: 3}
       propertyPath: m_Name
       value: HUD
