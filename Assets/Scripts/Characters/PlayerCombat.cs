@@ -41,8 +41,8 @@ namespace Characters
         private bool CanAttack()
         {
             return enabled
-                && _body.velocity.x < 0.01f
-                && _body.velocity.y < 0.01f
+                && Math.Abs(_body.velocity.x) < 0.01f
+                && Math.Abs(_body.velocity.y) < 0.01f
                 && !_weapon.OnCooldown();
         }
 

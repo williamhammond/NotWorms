@@ -43,26 +43,24 @@ namespace Characters
         public override void OnStartServer()
         {
             PlayerCombat.ServerPlayerFired += ServerHandleFire;
+
             PlayerMovement.ServerMovementStarted += ServerHandleMovementStart;
             PlayerMovement.ServerMovementEnded += ServerHandleMovementEnd;
-            PlayerMovement.ServerPlayerJumped += ServerHandlePlayerJumped;
-        }
 
-        private void ServerHandlePlayerJumped(int connectionId)
-        {
-            if (connectionId == connectionToClient.connectionId)
-            {
-                ServerHandleEnergyUpdate(10);
-            }
+            PlayerMovement.ServerPlayerJumped += ServerHandlePlayerJumped;
         }
 
         public override void OnStopServer()
         {
             PlayerCombat.ServerPlayerFired -= ServerHandleFire;
+
             PlayerMovement.ServerMovementStarted -= ServerHandleMovementStart;
             PlayerMovement.ServerMovementEnded -= ServerHandleMovementEnd;
+
+            PlayerMovement.ServerPlayerJumped -= ServerHandlePlayerJumped;
         }
 
+        [Server]
         private void ServerHandleMovementStart(int connectionId)
         {
             if (connectionId == connectionToClient.connectionId)
@@ -71,11 +69,21 @@ namespace Characters
             }
         }
 
+        [Server]
         private void ServerHandleMovementEnd(int connectionId)
         {
             if (connectionId == connectionToClient.connectionId)
             {
                 _isMoving = false;
+            }
+        }
+
+        [Server]
+        private void ServerHandlePlayerJumped(int connectionId)
+        {
+            if (connectionId == connectionToClient.connectionId)
+            {
+                ServerHandleEnergyUpdate(10);
             }
         }
 
@@ -90,13 +98,6 @@ namespace Characters
             }
         }
 
-        [Command]
-        private void CmdResetEnergy()
-        {
-            ServerEnergyReset?.Invoke(connectionToClient.connectionId);
-            _energy = 100f;
-        }
-
         [Server]
         private void ServerHandleFire(int connectionId)
         {
@@ -104,6 +105,13 @@ namespace Characters
             {
                 ServerHandleEnergyUpdate(10);
             }
+        }
+
+        [Command]
+        private void CmdResetEnergy()
+        {
+            ServerEnergyReset?.Invoke(connectionToClient.connectionId);
+            _energy = 100f;
         }
 
         #endregion
@@ -132,6 +140,5 @@ namespace Characters
         }
 
         #endregion
-
     }
 }

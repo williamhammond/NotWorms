@@ -49,7 +49,6 @@ namespace Characters
         [Server]
         private void ServerHandleOnPlayerSpawned(Player player)
         {
-            Debug.Log($"Adding player {player} to the turn controller");
             if (turnOrder.Contains(player))
             {
                 return;
@@ -75,7 +74,6 @@ namespace Characters
                     currentTurn = 0;
                 }
 
-                Debug.Log($"New Turn: {currentTurn}");
                 RpcSetTurnText(currentTurn);
             }
         }

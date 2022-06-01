@@ -102,7 +102,6 @@ namespace Characters
         public void TakeDamage(int damage)
         {
             _currentHealth -= damage;
-            Debug.Log($"Player maxHealth is {maxHealth}");
             if (!IsAlive())
             {
                 RpcOnDeath();

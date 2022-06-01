@@ -47,46 +47,42 @@ namespace Characters
 
         private void Update()
         {
-            if (!isLocalPlayer)
+            if (isLocalPlayer)
             {
-                return;
-            }
-
-            float movement = _playerInput.actions["Player/Movement"].ReadValue<float>();
-            if (_isMoving != (Mathf.Abs(movement) > 0.01f))
-            {
-                if (Mathf.Abs(movement) > 0.01f)
+                float movement = _playerInput.actions["Player/Movement"].ReadValue<float>();
+                if (_isMoving != (Mathf.Abs(movement) > 0.01f))
                 {
-                    _isMoving = true;
-                    CmdMovementStarted();
-                }
-                else
-                {
-                    _isMoving = false;
-                    CmdMovementEnded();
+                    if (Mathf.Abs(movement) > 0.01f)
+                    {
+                        _isMoving = true;
+                        CmdMovementStarted();
+                    }
+                    else
+                    {
+                        _isMoving = false;
+                        CmdMovementEnded();
+                    }
                 }
             }
         }
 
         private void FixedUpdate()
         {
-            if (!isLocalPlayer)
+            if (isLocalPlayer)
             {
-                return;
+                float movement = _playerInput.actions["Player/Movement"].ReadValue<float>();
+                ClientHandleMove(movement);
+
+                _isJumping = !Physics2D.BoxCast(
+                    _collider.bounds.center,
+                    _collider.bounds.size,
+                    0f,
+                    Vector2.down,
+                    0.1f,
+                    terrainLayerMask
+                );
+                _animator.SetBool(IsJumpingID, _isJumping);
             }
-
-            float movement = _playerInput.actions["Player/Movement"].ReadValue<float>();
-            ClientHandleMove(movement);
-
-            _isJumping = !Physics2D.BoxCast(
-                _collider.bounds.center,
-                _collider.bounds.size,
-                0f,
-                Vector2.down,
-                0.1f,
-                terrainLayerMask
-            );
-            _animator.SetBool(IsJumpingID, _isJumping);
         }
 
         #region Server
@@ -142,6 +138,7 @@ namespace Characters
             {
                 return;
             }
+
             _body.velocity = new Vector2(movement * speed, _body.velocity.y);
             Vector2 moveDirection = _body.velocity;
 
@@ -161,6 +158,7 @@ namespace Characters
             {
                 return;
             }
+
             if (!_isJumping)
             {
                 _body.AddForce(Vector2.up * speed, ForceMode2D.Impulse);
