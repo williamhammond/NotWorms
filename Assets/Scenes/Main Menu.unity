@@ -218,6 +218,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: NetworkManager
       objectReference: {fileID: 0}
+    - target: {fileID: 1034824813317227411, guid: a4be0443cd263f741bda10ccaa9c5dd0, type: 3}
+      propertyPath: onlineScene
+      value: Assets/Scenes/Sandbox.unity
+      objectReference: {fileID: 0}
     - target: {fileID: 1034824813317227412, guid: a4be0443cd263f741bda10ccaa9c5dd0, type: 3}
       propertyPath: m_RootOrder
       value: 3

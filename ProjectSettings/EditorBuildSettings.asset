@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/NetworkTestZone.unity
     guid: 9c2127e749882b44399a5480d7399302
+  - enabled: 1
+    path: Assets/Scenes/Sandbox.unity
+    guid: 4e68fbb1078cdf2458536023dc8f10bc
   m_configObjects: {}
