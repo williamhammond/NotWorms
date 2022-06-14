@@ -2,8 +2,8 @@
 {
     public interface IDamagable
     {
-        float GetHealth();
-        void TakeDamage(float damage);
+        int GetHealth();
+        void TakeDamage(int damage);
         bool IsAlive();
     }
 }

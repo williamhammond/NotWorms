@@ -1,81 +1,144 @@
 ﻿using System;
-using UI;
+using Mirror;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Characters
 {
-    public class PlayerEnergy : MonoBehaviour
+    public class PlayerEnergy : NetworkBehaviour
     {
-        [SerializeField]
-        private float energy = 100f;
+        [SyncVar(hook = nameof(ClientHandleEnergyUpdate))]
+        private float _energy = 100f;
 
-        public static event Action EnergyExhausted;
-        public static event Action EnergyReset;
-
-        private EnergyLabel _energyLabel;
-        private PlayerInput _playerInput;
         private bool _isMoving = false;
+
+        public static event Action<int> ServerEnergyExhausted;
+        public static event Action<int> ServerEnergyReset;
+
+        public event Action<float> ClientOnEnergyUpdated;
+
+        private PlayerInput _playerInput;
+
+        public float GetEnergy()
+        {
+            return _energy;
+        }
 
         private void Awake()
         {
-            _energyLabel = FindObjectOfType<EnergyLabel>();
-
-            _playerInput = GetComponentInParent<PlayerInput>();
-
-            _playerInput.actions["Player/Fire"].performed += HandleFire;
-            _playerInput.actions["Player/ResetEnergy"].performed += ResetEnergy;
-            _playerInput.actions["Player/Movement"].started += HandleMovementStart;
-            _playerInput.actions["Player/Movement"].canceled += HandleMovementEnd;
+            _playerInput = GetComponent<PlayerInput>();
         }
 
-        private void OnDestroy()
-        {
-            _playerInput.actions["Player/Fire"].performed -= HandleFire;
-            _playerInput.actions["Player/ResetEnergy"].performed -= ResetEnergy;
-            _playerInput.actions["Player/Movement"].started -= HandleMovementStart;
-            _playerInput.actions["Player/Movement"].canceled -= HandleMovementEnd;
-        }
+        #region Server
 
-        private void Update()
+        [ServerCallback]
+        private void FixedUpdate()
         {
             if (_isMoving)
             {
-                HandleEnergyUpdate(0.1f);
+                ServerHandleEnergyUpdate(0.1f);
             }
         }
 
-        private void HandleMovementEnd(InputAction.CallbackContext context)
+        public override void OnStartServer()
         {
-            _isMoving = false;
+            PlayerCombat.ServerPlayerFired += ServerHandleFire;
+
+            PlayerMovement.ServerMovementStarted += ServerHandleMovementStart;
+            PlayerMovement.ServerMovementEnded += ServerHandleMovementEnd;
+
+            PlayerMovement.ServerPlayerJumped += ServerHandlePlayerJumped;
         }
 
-        private void HandleMovementStart(InputAction.CallbackContext context)
+        public override void OnStopServer()
         {
-            _isMoving = true;
+            PlayerCombat.ServerPlayerFired -= ServerHandleFire;
+
+            PlayerMovement.ServerMovementStarted -= ServerHandleMovementStart;
+            PlayerMovement.ServerMovementEnded -= ServerHandleMovementEnd;
+
+            PlayerMovement.ServerPlayerJumped -= ServerHandlePlayerJumped;
         }
 
-        private void ResetEnergy(InputAction.CallbackContext context)
+        [Server]
+        private void ServerHandleMovementStart(int connectionId)
         {
-            EnergyReset?.Invoke();
-            energy = 100f;
-            _energyLabel.SetEnergy(energy);
-        }
-
-        private void HandleFire(InputAction.CallbackContext context)
-        {
-            HandleEnergyUpdate(10);
-        }
-
-        private void HandleEnergyUpdate(float cost)
-        {
-            bool energyPositive = energy > 0;
-            energy = Mathf.Max(0, energy - cost);
-            if (energyPositive && energy == 0)
+            if (connectionId == connectionToClient.connectionId)
             {
-                EnergyExhausted?.Invoke();
+                _isMoving = true;
             }
-            _energyLabel.SetEnergy(energy);
         }
+
+        [Server]
+        private void ServerHandleMovementEnd(int connectionId)
+        {
+            if (connectionId == connectionToClient.connectionId)
+            {
+                _isMoving = false;
+            }
+        }
+
+        [Server]
+        private void ServerHandlePlayerJumped(int connectionId)
+        {
+            if (connectionId == connectionToClient.connectionId)
+            {
+                ServerHandleEnergyUpdate(10);
+            }
+        }
+
+        [Server]
+        private void ServerHandleEnergyUpdate(float cost)
+        {
+            bool energyPositive = _energy > 0;
+            _energy = Mathf.Max(0, _energy - cost);
+            if (energyPositive && _energy == 0)
+            {
+                ServerEnergyExhausted?.Invoke(connectionToClient.connectionId);
+            }
+        }
+
+        [Server]
+        private void ServerHandleFire(int connectionId)
+        {
+            if (connectionId == connectionToClient.connectionId)
+            {
+                ServerHandleEnergyUpdate(10);
+            }
+        }
+
+        [Command]
+        private void CmdResetEnergy()
+        {
+            ServerEnergyReset?.Invoke(connectionToClient.connectionId);
+            _energy = 100f;
+        }
+
+        #endregion
+
+        #region Client
+
+        public override void OnStartAuthority()
+        {
+            _playerInput.actions["Player/ResetEnergy"].performed += ClientResetEnergy;
+        }
+
+        public override void OnStopClient()
+        {
+            _playerInput.actions["Player/ResetEnergy"].performed -= ClientResetEnergy;
+        }
+
+        [Client]
+        private void ClientResetEnergy(InputAction.CallbackContext obj)
+        {
+            CmdResetEnergy();
+        }
+
+        private void ClientHandleEnergyUpdate(float oldEnergy, float newEnergy)
+        {
+            ClientOnEnergyUpdated?.Invoke(newEnergy);
+        }
+
+        #endregion
     }
 }

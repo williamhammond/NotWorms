@@ -1,22 +1,18 @@
-using System;
 using System.Collections.Generic;
+using Mirror;
 using UI;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using Utils;
 
 namespace Characters
 {
-    public class TurnController : MonoBehaviour
+    public class TurnController : NetworkBehaviour
     {
-        public static Action<int> TurnChanged;
-
         [SerializeField]
         public int currentTurn = 0;
 
         private List<Player> turnOrder = new();
-        private readonly CurrentTurnText turnText;
-        private PlayerInput _playerInput;
+        private CurrentTurnText turnText;
 
         public float lastDebouncedActionDTime;
         private readonly float debouncedActionThreshold = .5f;
@@ -29,31 +25,56 @@ namespace Characters
         private void Awake()
         {
             lastDebouncedActionDTime = Time.time;
-
-            _playerInput = GetComponent<PlayerInput>();
-
-            _playerInput.actions["Player/EndTurn"].performed += HandleNextTurn;
-
-            Player.PlayerSpawned += HandlePlayerSpawned;
-            Player.PlayerDespawned += HandlePlayerDespawned;
+            turnText = FindObjectOfType<CurrentTurnText>();
         }
 
-        private void OnDestroy()
+        #region Server
+
+        public override void OnStartServer()
         {
-            Player.PlayerSpawned -= HandlePlayerSpawned;
-            Player.PlayerDespawned -= HandlePlayerDespawned;
+            Player.ServerOnPlayerSpawned += ServerHandleOnPlayerSpawned;
+            Player.ServerOnPlayerDespawned += ServerHandleOnPlayerDespawned;
+
+            Player.ServerPlayerEndedTurn += ServerHandleNextTurn;
         }
 
-        private void HandleNextTurn(InputAction.CallbackContext context)
+        public override void OnStopServer()
+        {
+            Player.ServerOnPlayerSpawned -= ServerHandleOnPlayerSpawned;
+            Player.ServerOnPlayerDespawned -= ServerHandleOnPlayerDespawned;
+
+            Player.ServerPlayerEndedTurn -= ServerHandleNextTurn;
+        }
+
+        [Server]
+        private void ServerHandleOnPlayerSpawned(Player player)
+        {
+            if (turnOrder.Contains(player))
+            {
+                return;
+            }
+
+            turnOrder.Add(player);
+        }
+
+        [Server]
+        private void ServerHandleOnPlayerDespawned(Player player)
+        {
+            turnOrder.Remove(player);
+        }
+
+        [Server]
+        private void ServerHandleNextTurn()
         {
             if (CanDebouncedAction())
             {
                 currentTurn++;
-                if (currentTurn >= turnOrder.Count)
+                if (currentTurn > turnOrder.Count - 1)
                 {
                     currentTurn = 0;
                 }
-                TurnChanged?.Invoke(currentTurn);
+
+                RpcSetTurnText(currentTurn);
             }
         }
 
@@ -73,17 +94,17 @@ namespace Characters
             return turnOrder[currentTurn];
         }
 
-        private void HandlePlayerSpawned(Player player)
-        {
-            if (turnOrder.Contains(player))
-                return;
+        #endregion
 
-            turnOrder.Add(player);
+
+        #region Client
+
+        [ClientRpc]
+        private void RpcSetTurnText(int turn)
+        {
+            turnText.SetTurn(turn);
         }
 
-        private void HandlePlayerDespawned(Player player)
-        {
-            turnOrder.Remove(player);
-        }
+        #endregion
     }
 }
